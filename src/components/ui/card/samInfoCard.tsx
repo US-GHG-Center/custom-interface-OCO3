@@ -7,7 +7,10 @@ import {
   CaptionValue,
 } from './stacItemInfoCard';
 
-interface SamInfoCardProps extends StacItemInfoCardProps {}
+interface SamInfoCardProps extends StacItemInfoCardProps {
+  hoveredVizid: string;
+  cardRef?: React.MutableRefObject<HTMLDivElement | null> | undefined;
+}
 
 export const SamInfoCard = ({
   stacItem,
@@ -15,6 +18,12 @@ export const SamInfoCard = ({
   onHover,
   hovered,
   clicked,
+  hoveredVizid,
+  VMAX,
+  VMIN,
+  colorMap,
+  assets,
+  cardRef,
 }: SamInfoCardProps): JSX.Element => {
   const [startDatetime, setStartDatetime] = useState<string>('');
   const [endDatetime, setEndDatetime] = useState<string>('');
@@ -22,6 +31,11 @@ export const SamInfoCard = ({
   const [targetName, setTargetName] = useState<string>('');
   const [targetType, setTargetType] = useState<string>('');
   const [targetAltitude, setTargetAltitude] = useState<string>('');
+  const [hov, setHov] = useState<boolean>(false);
+
+  useEffect(() => {
+    setHov(stacItem.id === hoveredVizid);
+  }, [hoveredVizid, stacItem.id]);
 
   useEffect(() => {
     let startDatetime: string = stacItem.properties.start_datetime;
@@ -40,43 +54,58 @@ export const SamInfoCard = ({
   }, [stacItem]);
 
   return (
-    <StacItemInfoCard
-      stacItem={stacItem}
-      onClick={onClick}
-      onHover={onHover}
-      hovered={hovered}
-      clicked={clicked}
-    >
-      <>
-        <HorizontalLayout>
-          <CaptionValue caption='Target Id' value={targetId} className='' />
-          <CaptionValue caption='Target Type' value={targetType} className='' />
-        </HorizontalLayout>
-        <HorizontalLayout>
-          <CaptionValue caption='Target Name' value={targetName} className='' />
-          <CaptionValue
-            caption='Target Altitude'
-            value={targetAltitude}
-            className=''
-          />
-        </HorizontalLayout>
-        <HorizontalLayout>
-          <CaptionValue
-            caption='Visualization Start Time '
-            value={
-              moment.utc(startDatetime).format('MM/DD/YYYY, HH:mm:ss') + ' UTC'
-            }
-            className=''
-          />
-          <CaptionValue
-            caption='Visualization End Time '
-            value={
-              moment.utc(endDatetime).format('MM/DD/YYYY, HH:mm:ss') + ' UTC'
-            }
-            className=''
-          />
-        </HorizontalLayout>
-      </>
-    </StacItemInfoCard>
+    <div ref={cardRef}>
+      <StacItemInfoCard
+        stacItem={stacItem}
+        onClick={onClick}
+        onHover={onHover}
+        hovered={hov}
+        clicked={clicked}
+        VMAX={VMAX}
+        VMIN={VMIN}
+        colorMap={colorMap}
+        assets={assets}
+      >
+        <>
+          <HorizontalLayout>
+            <CaptionValue caption='Target Id' value={targetId} className='' />
+            <CaptionValue
+              caption='Target Type'
+              value={targetType}
+              className=''
+            />
+          </HorizontalLayout>
+          <HorizontalLayout>
+            <CaptionValue
+              caption='Target Name'
+              value={targetName}
+              className=''
+            />
+            <CaptionValue
+              caption='Target Altitude'
+              value={targetAltitude}
+              className=''
+            />
+          </HorizontalLayout>
+          <HorizontalLayout>
+            <CaptionValue
+              caption='Visualization Start Time '
+              value={
+                moment.utc(startDatetime).format('MM/DD/YYYY, HH:mm:ss') +
+                ' UTC'
+              }
+              className=''
+            />
+            <CaptionValue
+              caption='Visualization End Time '
+              value={
+                moment.utc(endDatetime).format('MM/DD/YYYY, HH:mm:ss') + ' UTC'
+              }
+              className=''
+            />
+          </HorizontalLayout>
+        </>
+      </StacItemInfoCard>
+    </div>
   );
 };

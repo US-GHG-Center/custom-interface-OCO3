@@ -3,12 +3,23 @@ import { useSearchParams } from 'react-router-dom';
 
 import { Dashboard } from '../dashboard';
 import { fetchAllFromSTACAPI } from '../../services/api';
+import {
+  dataTransformation,
+  DataTransformationResult,
+} from './helper/dataTransform';
 
-import { STACItem } from '../../dataModel';
+import {
+  STACItem,
+  SAMMissingMetaData,
+  DataTree,
+  SamsTargetDict,
+} from '../../dataModel';
 
-interface DataTree {
-  [key: string]: STACItem;
-}
+import missingProperties from '../../assets/dataset/metadata.json';
+
+// interface DataTree {
+//   [key: string]: STACItem;
+// }
 
 export function DashboardContainer(): React.JSX.Element {
   // get the query params
@@ -25,10 +36,11 @@ export function DashboardContainer(): React.JSX.Element {
       : null
   ); // let default zoom level be controlled by map component
   const [collectionId] = useState<string>(
-    searchParams.get('collection-id') || 'goes-ch4plume-v1'
+    searchParams.get('collection-id') || 'oco3-co2-sams-daygrid-v11r'
   );
   const [loadingData, setLoadingData] = useState<boolean>(true);
   const dataTree = useRef<DataTree | null>(null);
+  const samsTargetDict = useRef<SamsTargetDict | null>(null);
 
   useEffect(() => {
     setLoadingData(true);
@@ -38,14 +50,29 @@ export function DashboardContainer(): React.JSX.Element {
         // get all the collection items
         const collectionItemUrl: string = `${process.env.REACT_APP_STAC_API_URL}/collections/${collectionId}/items`;
         const data: STACItem[] = await fetchAllFromSTACAPI(collectionItemUrl);
+        const filteredData: STACItem[] = data.filter(
+          (item: STACItem) => !item.id.includes('unfiltered')
+        );
 
-        const vizItemsDict: DataTree = {}; // visualization_items[string] = visualization_item
-        const testSample: STACItem[] = data.slice(0, 10);
-        testSample.forEach((items) => {
-          vizItemsDict[items.id] = items;
-        });
-        dataTree.current = vizItemsDict;
+        const missingData: SAMMissingMetaData[] = missingProperties.data;
 
+        const transformedData: DataTransformationResult = dataTransformation(
+          filteredData,
+          missingData
+        );
+
+        const dtm: DataTree = transformedData.DATA_TREE;
+        const std: SamsTargetDict = transformedData.samsTargetDict;
+
+        // const vizItemsDict: DataTree = {}; // visualization_items[string] = visualization_item
+        // const testSample: STACItem[] = data.slice(0, 10);
+        // testSample.forEach((items) => {
+        //   vizItemsDict[items.id] = items;
+        // });
+        // dataTree.current = vizItemsDict;
+
+        dataTree.current = dtm;
+        samsTargetDict.current = std;
         // NOTE: incase we need metadata and other added information,
         // add that to the STAC Item Property
 
@@ -62,6 +89,7 @@ export function DashboardContainer(): React.JSX.Element {
   return (
     <Dashboard
       dataTree={dataTree}
+      samsTargetDict={samsTargetDict}
       zoomLocation={zoomLocation}
       zoomLevel={zoomLevel}
       setZoomLocation={setZoomLocation}

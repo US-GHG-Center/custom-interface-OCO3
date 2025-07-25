@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from 'react';
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, { useEffect, useState, useCallback, useRef } from 'react';
 import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
 import { Typography } from '@mui/material';
@@ -10,6 +11,7 @@ import {
   MarkerFeature,
   VisualizationLayers,
   ColorBar,
+  ConfigurableColorBar,
   LoadingSpinner,
   PersistentDrawerRight,
   Title,
@@ -18,16 +20,20 @@ import {
   Search,
   FilterByDate,
   VizItemAnimation,
-  VisualizationItemCard,
-  VizItemTimeline
+  Dropdown,
+  VizItemTimeline,
 } from '../../components/index.js';
 
-import { STACItem } from '../../dataModel';
+import { SamInfoCard } from '../../components/ui/card/samInfoCard';
 
-interface VizItem extends STACItem {}
+import { DataTree, Target, SAM, SamsTargetDict } from '../../dataModel';
 
-const TITLE: string = 'Interface Template';
-const DESCRIPTION: string = `Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book`;
+import { getTargetIdFromStacIdSAM } from '../dashboardContainer/helper';
+
+interface VizItem extends SAM {}
+
+const TITLE: string = 'OCO3 SAMS';
+const DESCRIPTION: string = `OCO-3, aboard the ISS, uses an agile pointing mirror to quickly collect 80x80km "Snapshot Area Maps" (SAMs) and target observations. These datasets, including XCO2 and SIF, help study carbon sources and plant health.`;
 
 const HorizontalLayout = styled.div`
   width: 90%;
@@ -37,10 +43,6 @@ const HorizontalLayout = styled.div`
   margin: 12px;
 `;
 
-interface VizItemDict {
-  [key: string]: VizItem;
-}
-
 interface DashboardProps {
   /**
    * The dataTree refers to the STACItems(/vizItems), structured in certain way
@@ -49,7 +51,8 @@ interface DashboardProps {
    * Example 2: Complex application needs might ask for somekind of complex dataTree
    * - representing one to many relationships - hence requiring n-tree instead of simple dictionary.
    */
-  dataTree: React.MutableRefObject<VizItemDict | null>;
+  dataTree: React.MutableRefObject<DataTree | null>;
+  samsTargetDict: React.MutableRefObject<SamsTargetDict | null>;
   zoomLocation: number[];
   setZoomLocation: React.Dispatch<React.SetStateAction<number[]>>;
   zoomLevel: number | null;
@@ -59,6 +62,7 @@ interface DashboardProps {
 
 export function Dashboard({
   dataTree,
+  samsTargetDict,
   zoomLocation,
   setZoomLocation,
   zoomLevel,
@@ -66,97 +70,172 @@ export function Dashboard({
   loadingData,
 }: DashboardProps) {
   // states for data
-  const [vizItemsDict, setVizItemsDict] = useState<VizItemDict>({}); // store all available visualization items
-  const [selectedVizItems, setSelectedVizItems] = useState<VizItem[]>([]); // all visualization items for the selected region (marker)
+  const [targets, setTargets] = useState<VizItem[]>([]);
   const [hoveredVizLayerId, setHoveredVizLayerId] = useState<string>(''); // vizItem_id of the visualization item which was hovered over
   const [filteredVizItems, setFilteredVizItems] = useState<VizItem[]>([]); // visualization items for the selected region with the filter applied
-
-  const [vizItemsForAnimation, setVizItemsForAnimation] = useState<VizItem[]>([]); // list of subdaily_visualization_item used for animation
-  const [visualizationLayers, setVisualizationLayers] = useState<VizItem[]>([]);
-
+  const [visualizationLayers, setVisualizationLayers] = useState<VizItem[]>([]); //all visualization items for the selected region (marker) // TODO: make it take just one instead of a list.
+  const [selectedSams, setSelectedSams] = useState<VizItem[]>([]); // this represents the sams, when a target is selected.
   //color map
-  const [VMAX, setVMAX] = useState<number>(100);
-  const [VMIN, setVMIN] = useState<number>(-92);
+  const [VMAX, setVMAX] = useState<number>(420);
+  const [VMIN, setVMIN] = useState<number>(400);
   const [colormap, setColormap] = useState<string>('default');
-  const [assets, setAssets] = useState<string>('rad');
+  const [assets, setAssets] = useState<string>('cog_default');
+  // targets based on target type
+  const [targetTypes, setTargetTypes] = useState<string[]>(['all']);
+  const [selectedTargetType, setSelectedTargetType] = useState<string>('all');
 
   // states for components/controls
   const [openDrawer, setOpenDrawer] = useState<boolean>(false);
 
-  // handler functions
-  const handleSelectedVizItem = (vizItemId: string) => {
-    if (!vizItemId) return;
-    let vizItem = vizItemsDict[vizItemId];
+  // ref. to scroll to the hovered card within the drawer
+  const cardRef = useRef<HTMLDivElement>(null);
 
-    setVisualizationLayers([vizItem]);
-    let location = [
-      Number(vizItem.geometry.coordinates[0][0][0]),
-      Number(vizItem.geometry.coordinates[0][0][1]),
+  // callback handler functions
+  // Note: these callback handler function needs to be initilaized only once.
+  // so using useCallback hook.
+  const handleSelectedMarker = useCallback((vizItemId: string) => {
+    if (!vizItemId || !dataTree.current) return;
+    let targetId: string = getTargetIdFromStacIdSAM(vizItemId);
+    let target: Target | undefined = dataTree.current?.[targetId];
+
+    // instead get the sam with the provided vizItemId
+    let sam: SAM | undefined = target?.getRepresentationalSAM();
+    let candidateSams: SAM[] = target ? target.getSortedSAMs() : [];
+    if (!sam) return;
+    setVisualizationLayers([sam]);
+    setSelectedSams(candidateSams);
+    let location: number[] = [
+      Number(sam.geometry.coordinates[0][0][0]),
+      Number(sam.geometry.coordinates[0][0][1]),
     ];
     setZoomLocation(location);
     setZoomLevel(null); // take the default zoom level
     setOpenDrawer(true);
-  };
+  }, []);
 
-  const handleSelectedVizLayer = (vizItemId: string) => {
+  const handleSelectedVizLayer = useCallback((vizItemId: string) => {
     if (!vizItemId) return;
-    let vizItem = vizItemsDict[vizItemId];
+    let targetId: string = getTargetIdFromStacIdSAM(vizItemId);
+    let target: Target | undefined = dataTree.current?.[targetId];
+
+    let vizItem: SAM | undefined = target?.getRepresentationalSAM();
+    if (!vizItem) return;
+
+    // set vizItem to be rendered.
+    // enable the timeline component.
+
     let location = [
       Number(vizItem.geometry.coordinates[0][0][0]),
       Number(vizItem.geometry.coordinates[0][0][1]),
     ];
     setZoomLocation(location);
-    handleSelectedVizItemSearch(vizItemId);
-    handleAnimationReady(vizItemId);
     setZoomLevel(null); // take the default zoom level
-  };
+  }, []);
 
-  const handleAnimationReady = (vizItemId: string) => {
-    if (!vizItemId) return;
-    // Provide a sorted list of (by start date) items for animation
-    const vizItemsForAnimation: VizItem[] = selectedVizItems.slice(0, 10);
-    setVizItemsForAnimation(vizItemsForAnimation);
-  };
-
-  const handleSelectedVizItemSearch = (vizItemId: string) => {
+  const handleSelectedVizItemSearch = useCallback((vizItemId: string) => {
     // will focus on the visualization item along with its visualization item metadata card
     // will react to update the metadata on the sidedrawer
-    if (!vizItemsDict || !vizItemId) return;
-    const vizItem = vizItemsDict[vizItemId];
-    const location = vizItem?.geometry?.coordinates[0][0];
-    setSelectedVizItems([vizItem]);
-    setOpenDrawer(true);
-    setZoomLocation(location.map((coord) => Number(coord)));
-    setZoomLevel(null); // take the default zoom level
-    setVizItemsForAnimation([]); // to reset the previous animation
-  };
+    if (!vizItemId) return;
+    // const vizItem = vizItemsDict[vizItemId];
+    // const location = vizItem?.geometry?.coordinates[0][0];
+    // setTargets([vizItem]);
+    // setOpenDrawer(true);
+    // setZoomLocation(location.map((coord) => Number(coord)));
+    // setZoomLevel(null); // take the default zoom level
+  }, []);
 
-  const handleResetHome = () => {
+  const handleResetHome = useCallback(() => {
+    if (!dataTree.current) return;
+    // Get all Targets. Here everything is wrt vizItem/SAM, so get a representational SAM.
+    let targets: Target[] = getTargetsFromDataTree(dataTree.current);
+    let repTargets: SAM[] = getSamRepOfTarget(targets);
+    setTargets(repTargets);
+    setVisualizationLayers([]);
+    setSelectedSams([]);
+    setFilteredVizItems(repTargets);
     setHoveredVizLayerId('');
-    setFilteredVizItems(selectedVizItems);
-    setVizItemsForAnimation([]);
     setOpenDrawer(false);
     setZoomLevel(4);
     setZoomLocation([-98.771556, 32.967243]);
+  }, []);
+
+  const handleSelectedTargetType = useCallback((targetType: string) => {
+    setSelectedTargetType(targetType);
+
+    if (targetType === 'all') {
+      if (!dataTree.current) return;
+      let targets: Target[] = getTargetsFromDataTree(dataTree.current);
+      let repTargets: SAM[] = getSamRepOfTarget(targets);
+      setTargets(repTargets);
+      return;
+    }
+
+    if (!samsTargetDict.current) return;
+    let targets: Target[] = samsTargetDict.current[targetType]?.targets;
+    let repTargets: SAM[] = getSamRepOfTarget(targets);
+    setTargets(repTargets);
+  }, []);
+
+  const handleTimelineTimeChange = useCallback((vizItemId: string) => {
+    if (!dataTree.current) return;
+    // from the vizItemId, find the target id.
+    const targetId: string = getTargetIdFromStacIdSAM(vizItemId);
+    const target: Target = dataTree.current[targetId];
+    // using the targetId, find the necessary sam.
+    const changedVizItem: VizItem | undefined = target.getSAMbyId(vizItemId);
+    if (changedVizItem) setVisualizationLayers([changedVizItem]);
+  }, []);
+
+  const handleHoverOverSelectedSams = useCallback((vizItemId: string) => {
+    setHoveredVizLayerId(vizItemId);
+  }, []);
+
+  // helpers
+  const getSamRepOfTarget = (targets: Target[]): SAM[] => {
+    if (!dataTree) return [];
+    const repTargets: SAM[] = [];
+    targets.forEach((target: Target) => {
+      if (!target) {
+        return undefined;
+      }
+      let repTarget: SAM = target.getRepresentationalSAM();
+      // use the location in the target.
+      repTarget.geometry.coordinates = [[target.location]];
+      repTargets.push(target.getRepresentationalSAM());
+    });
+    return repTargets;
+  };
+
+  const getTargetsFromDataTree = (dataTree: DataTree): Target[] => {
+    if (!dataTree) return [];
+    let targets: Target[] = Object.values(dataTree);
+    return targets;
   };
 
   // Component Effects
   useEffect(() => {
     if (!dataTree.current) return;
 
-    // Mocked data initialization for the application.
-    setVizItemsDict(dataTree.current);
-    setSelectedVizItems(Object.values(dataTree.current));
+    // Get all Targets. Here everything is wrt vizItem/SAM, so get a representational SAM.
+    let targets: Target[] = getTargetsFromDataTree(dataTree.current);
+    let repTargets: SAM[] = getSamRepOfTarget(targets);
+    setTargets(repTargets);
 
     // also few extra things for the application state. We can receive it from collection json.
-    const VMIN = 0;
-    const VMAX = 0.4;
-    const colormap: string = 'default';
+    const VMIN = 415;
+    const VMAX = 420;
+    const colormap: string = 'plasma';
     setVMIN(VMIN);
     setVMAX(VMAX);
     setColormap(colormap);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dataTree.current]);
+
+  useEffect(() => {
+    if (!samsTargetDict.current) return;
+    const targetTypesLocal = Object.keys(samsTargetDict.current);
+    setTargetTypes(['all', ...targetTypesLocal]);
+  }, [samsTargetDict.current]);
 
   // JSX
   return (
@@ -165,30 +244,36 @@ export function Dashboard({
         <MainMap>
           <Paper className='title-container'>
             <Title title={TITLE} description={DESCRIPTION} />
-            <div className='title-content'>
+            {/* <div className='title-content'>
               <HorizontalLayout>
                 <Search
-                  vizItems={selectedVizItems}
+                  vizItems={targets}
                   onSelectedVizItemSearch={handleSelectedVizItemSearch}
                   placeHolderText={'Search by vizItem ID and substring'}
                 ></Search>
               </HorizontalLayout>
               <HorizontalLayout>
                 <FilterByDate
-                  vizItems={selectedVizItems}
+                  vizItems={targets}
                   onFilteredVizItems={setFilteredVizItems}
                 />
               </HorizontalLayout>
+            </div> */}
+            {selectedSams.length ? (
               <HorizontalLayout>
-                <VizItemAnimation
-                  VMIN={VMIN}
-                  VMAX={VMAX}
-                  colormap={colormap}
-                  assets={assets}
-                  vizItems={vizItemsForAnimation}
+                {/* <div className={"sandesh"} style={{ margin: '0 0.9rem' }}> */}
+                <VizItemTimeline
+                  vizItems={selectedSams}
+                  onVizItemSelect={handleTimelineTimeChange}
+                  activeItemId={hoveredVizLayerId}
+                  onVizItemHover={handleHoverOverSelectedSams}
+                  title=''
                 />
+                {/* </div> */}
               </HorizontalLayout>
-            </div>
+            ) : (
+              <></>
+            )}
           </Paper>
 
           <MapZoom zoomLocation={zoomLocation} zoomLevel={zoomLevel} />
@@ -199,8 +284,8 @@ export function Dashboard({
             handleResetToSelectedRegion={() => {}}
           />
           <MarkerFeature
-            vizItems={filteredVizItems}
-            onClickOnMarker={handleSelectedVizItem}
+            vizItems={targets}
+            onClickOnMarker={handleSelectedMarker}
           ></MarkerFeature>
           <VisualizationLayers
             vizItems={visualizationLayers}
@@ -212,8 +297,14 @@ export function Dashboard({
             onHoverOverLayer={setHoveredVizLayerId}
           />
         </MainMap>
+        <Dropdown
+          items={targetTypes}
+          onSelection={handleSelectedTargetType}
+          selectedItemId={selectedTargetType}
+        ></Dropdown>
         <PersistentDrawerRight
           open={openDrawer}
+          cardRef={cardRef}
           header={
             <>
               <Typography
@@ -222,49 +313,54 @@ export function Dashboard({
                 fontWeight='bold'
                 className='drawer-head-content'
               >
-                USA
+                SAMs
               </Typography>
               <Typography
-                variant='subtitle1'
+                variant='h6'
                 component='div'
+                fontWeight='bold'
                 className='drawer-head-content'
               >
-                - Denver
+                {visualizationLayers.length &&
+                  visualizationLayers[0].properties.target_name}
               </Typography>
             </>
           }
           body={
-            !!selectedVizItems.length &&
-            selectedVizItems.map((vizItem) => (
-              <VisualizationItemCard
-                key={vizItem.id}
-                vizItemSourceId={vizItem.id}
-                vizItemSourceName={vizItem.id}
-                imageUrl={`xyz`}
-                tiffUrl={`abc`}
-                lon={vizItem.geometry.coordinates[0][0][0]}
-                lat={vizItem.geometry.coordinates[0][0][1]}
-                totalReleaseMass={vizItem.properties.releaseMass}
-                colEnhancements={vizItem.properties.colEnhancements}
-                startDatetime={vizItem.properties.startDatetime}
-                endDatetime={vizItem.properties.endDatetime}
-                duration={vizItem.properties.duration}
-                handleSelectedVizItemCard={handleSelectedVizItem}
-                hoveredVizItemId={hoveredVizLayerId}
-                setHoveredVizItemId={setHoveredVizLayerId}
+            !!selectedSams.length &&
+            selectedSams.map((vizItem: VizItem) => (
+              <SamInfoCard
+                stacItem={vizItem}
+                onClick={handleTimelineTimeChange}
+                onHover={handleHoverOverSelectedSams}
+                hovered={false} //hovered from inside
+                clicked={false}
+                hoveredVizid={hoveredVizLayerId}
+                VMAX={VMAX}
+                VMIN={VMIN}
+                assets={assets}
+                colorMap={colormap}
+                cardRef={
+                  vizItem?.id === hoveredVizLayerId ? cardRef : undefined
+                }
               />
             ))
           }
         />
       </div>
       {VMAX && (
-        <ColorBar
-          label={'Methane Column Enhancement (mol/m²)'}
-          VMAX={VMAX}
-          VMIN={VMIN}
-          colormap={colormap}
-          STEPSIZE={1}
-        />
+        <div style={{ position: 'absolute', right: 10, bottom: 18 }}>
+          <ConfigurableColorBar
+            id='coolcolor'
+            VMAXLimit={450}
+            VMINLimit={390}
+            colorMap={colormap}
+            setColorMap={setColormap}
+            setVMIN={setVMIN}
+            setVMAX={setVMAX}
+            unit='(ppm)'
+          />
+        </div>
       )}
       {loadingData && <LoadingSpinner />}
     </Box>

@@ -18,6 +18,11 @@ interface Properties {
   [key: string]: any;
 }
 
+export interface LocationMeta {
+  type: string;
+  coordinates: number[];
+}
+
 interface Link {
   rel: string;
   type: string;
@@ -66,9 +71,9 @@ interface Statistics {
   valid_percent: number;
 }
 
-interface Geometry {
+export interface Geometry {
   type: string;
-  coordinates: string[][][];
+  coordinates: number[][][];
 }
 
 interface ProjJSON {
@@ -102,5 +107,5 @@ interface Axis {
 }
 
 export type DateTime = string;
-export type Lon = string;
-export type Lat = string;
+export type Lon = number;
+export type Lat = number;
