@@ -307,8 +307,8 @@ export function Dashboard({
           <div className='legend-container'>
             {targetTypes.length > 0 && (
               <MapLegend
-                title={'Marker Categories'}
-                description={'Click one or more categories to filter the markers on the map.'}
+                title={'SAM Type'}
+                description={'Click one or more SAM Type to filter.'}
                 items={targetTypes}
                 onSelect={handleSelectedTargetType}
               />

@@ -50,7 +50,7 @@ export const MapLegend: React.FC<MapLegendProps> = ({ items, onSelect, title = '
           <Box display="flex" justifyContent="space-between" alignItems="center">
             <Typography className='map-legend-title'>{title}</Typography>
             <Tooltip title="Clear Filter">
-              <ButtonBase className="clear-filter-button" onClick={clearFilter}>
+              <ButtonBase className="clear-filter-button" onClick={clearFilter} sx={{ color: 'text.secondary' }}>
                 <Typography variant="body2" sx={{ mr: 1 }}>Clear filters </Typography><ClearAllIcon fontSize="medium" />
               </ButtonBase>
             </Tooltip>
