@@ -2,7 +2,7 @@
 import React, { useEffect, useState, useCallback, useRef } from 'react';
 import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
-import { Typography } from '@mui/material';
+import { Typography, Tooltip } from '@mui/material';
 import styled from 'styled-components';
 import './index.css';
 
@@ -22,10 +22,10 @@ import {
   VizItemAnimation,
   Dropdown,
   VizItemTimeline,
-  MapLegend
+  MapLegend,
+  BlankInfoCard,
+  SamInfoCard
 } from '../../components/index.js';
-
-import { SamInfoCard } from '../../components/ui/card/samInfoCard';
 
 import { DataTree, Target, SAM, SamsTargetDict } from '../../dataModel';
 
@@ -332,6 +332,7 @@ export function Dashboard({
           open={openDrawer}
           cardRef={cardRef}
           header={
+            selectedSams.length > 0 ? (
             <>
               <Typography
                 variant='h6'
@@ -341,37 +342,67 @@ export function Dashboard({
               >
                 SAMs
               </Typography>
-              <Typography
+              <Tooltip
+                title={
+                  visualizationLayers.length
+                    ? visualizationLayers[0].properties.target_name
+                    : ''
+                }
+              >
+                <Typography
+                  variant="h6"
+                  component="div"
+                  fontWeight="bold"
+                  className="drawer-head-content"
+                  sx={{
+                    textAlign: 'right',
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis',
+                    whiteSpace: 'nowrap',
+                    maxWidth: '75%',
+                    display: 'block',
+                  }}
+                >
+                  {visualizationLayers.length &&
+                    visualizationLayers[0].properties.target_name}
+                </Typography>
+              </Tooltip>
+            </>
+            ): (
+             <Typography
                 variant='h6'
                 component='div'
                 fontWeight='bold'
                 className='drawer-head-content'
               >
-                {visualizationLayers.length &&
-                  visualizationLayers[0].properties.target_name}
+                No SAM selected
               </Typography>
-            </>
+            )
           }
           body={
-            !!selectedSams.length &&
-            selectedSams.map((vizItem: VizItem) => (
-              <SamInfoCard
-                stacItem={vizItem}
-                onClick={handleTimelineTimeChange}
-                onHover={handleHoverOverSelectedSams}
-                hovered={false} //hovered from inside
-                clicked={false}
-                hoveredVizid={hoveredVizLayerId}
-                VMAX={VMAX}
-                VMIN={VMIN}
-                assets={assets}
-                colorMap={colormap}
-                cardRef={
-                  vizItem?.id === hoveredVizLayerId ? cardRef : undefined
-                }
+            selectedSams.length > 0 ? (
+              selectedSams.map((vizItem: VizItem) => (
+                <SamInfoCard
+                  key={vizItem.id}
+                  stacItem={vizItem}
+                  onClick={handleTimelineTimeChange}
+                  onHover={handleHoverOverSelectedSams}
+                  hovered={false}
+                  clicked={false}
+                  hoveredVizid={hoveredVizLayerId}
+                  VMAX={VMAX}
+                  VMIN={VMIN}
+                  assets={assets}
+                  colorMap={colormap}
+                  cardRef={vizItem?.id === hoveredVizLayerId ? cardRef : undefined}
+                />
+              ))
+            ) : (
+              <BlankInfoCard
+                illustration="map_pointer.svg"
+                message="Select a SAM to view details"
               />
-            ))
-          }
+            )}
         />
       </div>
 
