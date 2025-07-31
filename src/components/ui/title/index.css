@@ -12,6 +12,8 @@
   color: black;
   z-index: 999;
   border-radius: 12px !important;
+  max-height: 55%;
+  overflow: scroll;
 }
 
 .title-content {

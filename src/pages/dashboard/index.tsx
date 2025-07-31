@@ -27,8 +27,8 @@ import { Oco3DataFactory } from '../../oco3DataFactory';
 
 import './index.css';
 
-const TITLE: string = 'OCO3 SAMS';
-const DESCRIPTION: string = `OCO-3, aboard the ISS, uses an agile pointing mirror to quickly collect 80x80km "Snapshot Area Maps" (SAMs) and target observations. These datasets, including XCO2 and SIF, help study carbon sources and plant health.`;
+const TITLE: string = 'OCO-3 Carbon Dioxide Snapshot Area Maps';
+const DESCRIPTION: string = `OCO-3’s Snapshot Area Mapping (SAM) mode is a unique mode of operation that allows OCO-3 on the ISS to quickly scan large areas (80 km x 80 km) and collect data over specific targets, like urban areas, megacities and volcanoes. Shown here are SAMs of atmospheric CO2, processed with the ACOS CO2 retrieval algorithm version 11R.`;
 
 const HorizontalLayout = styled.div`
   width: 90%;
@@ -162,9 +162,9 @@ export function Dashboard({
     setTargetTypes([...targetTypesLocal]);
 
     // also few extra things for the application state. We can receive it from collection json.
-    const VMIN = 415;
+    const VMIN = 400;
     const VMAX = 420;
-    const colormap: string = 'plasma';
+    const colormap: string = 'viridis';
     setVMIN(VMIN);
     setVMAX(VMAX);
     setColormap(colormap);
@@ -176,25 +176,6 @@ export function Dashboard({
     <Box className='fullSize'>
       <div id='dashboard-map-container'>
         <MainMap>
-          <Paper className='title-container'>
-            <Title title={TITLE} description={DESCRIPTION} />
-            {selectedSams.length ? (
-              <HorizontalLayout>
-                {/* <div className={"sandesh"} style={{ margin: '0 0.9rem' }}> */}
-                <VizItemTimeline
-                  vizItems={selectedSams}
-                  onVizItemSelect={handleTimelineTimeChange}
-                  activeItemId={hoveredVizLayerId}
-                  onVizItemHover={handleHoverOverSelectedSams}
-                  title=''
-                />
-                {/* </div> */}
-              </HorizontalLayout>
-            ) : (
-              <></>
-            )}
-          </Paper>
-
           <MapZoom zoomLocation={zoomLocation} zoomLevel={zoomLevel} />
           <MapControls
             openDrawer={openDrawer}
@@ -265,7 +246,7 @@ export function Dashboard({
             )}
             {VMAX && (
               <ConfigurableColorBar
-                id='coolcolor'
+                id='configurable-color-bar'
                 VMAXLimit={420}
                 VMINLimit={400}
                 colorMap={colormap}
@@ -349,7 +330,7 @@ export function Dashboard({
               ))
             ) : (
               <BlankInfoCard
-                illustration="map_pointer.svg"
+                illustration={`${process.env.PUBLIC_URL}/map_pointer.svg`}
                 message="Select a SAM to view details"
               />
             )}
