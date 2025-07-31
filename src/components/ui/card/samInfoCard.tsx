@@ -49,16 +49,21 @@ export const SamInfoCard = ({
   };
 
   const extractDateTime = (input: string): string => {
+    // id: is in Format: <data-type>_<target_id>_<datetime>_<filter-status>_<ghg-type>. e.g. "oco3-co2_volcano0010_2025-03-30T232216Z_unfiltered_xco2"
+
     const parts = input.split('_');
-    for (const part of parts) {
-      const momentObj = moment.utc(part, 'YYYY-MM-DDTHHmmss[Z]', true);
-      if (momentObj.isValid()) {
-        return momentObj.format('MM/DD/YYYY, HH:mm:ss [UTC]');
-      }
+
+    if (parts.length < 3) return 'null';
+    const datetimePart = parts.slice(-3)[0];
+
+    if (!datetimePart) return 'null';
+
+    const momentObj = moment.utc(datetimePart, 'YYYY-MM-DDTHHmmss[Z]', true);
+    if (momentObj.isValid()) {
+      return momentObj.format('MM/DD/YYYY, HH:mm:ss [UTC]');
     }
     return 'null';
   };
-
 
   useEffect(() => {
     setHov(stacItem.id === hoveredVizid);
