@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import {
   Box,
   Typography,
@@ -21,12 +21,13 @@ interface MapLegendProps {
   onSelect: (ids: string[]) => void;
   title: string;
   description: string;
+  numColumns?: number | null;
 }
 
-export const MapLegend: React.FC<MapLegendProps> = ({ items, onSelect, title = '', description = '' }) => {
+export const MapLegend: React.FC<MapLegendProps> = ({ items, onSelect, title = '', description = '', numColumns = null }) => {
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
-  const COLUMN_THRESHOLD = 3;
-
+  const [computedColumns, setComputedColumns] = useState(1);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   const toggleSelect = (id: string) => {
     const newSelected = selectedIds.includes(id)
@@ -41,10 +42,34 @@ export const MapLegend: React.FC<MapLegendProps> = ({ items, onSelect, title = '
     onSelect([]);
   };
 
-  const isTwoColumn = items.length > COLUMN_THRESHOLD;
+  useEffect(() => {
+    if (numColumns) {
+      setComputedColumns(numColumns);
+      return;
+    }
+
+    // Dynamically calculate the number of columns based on container width
+    if (!containerRef.current) return;
+    const resizeObserver = new ResizeObserver(([entry]) => {
+      const width = entry.contentRect.width;
+      if (width < 200) setComputedColumns(1);
+      else if (width < 500) setComputedColumns(2);
+      else setComputedColumns(3);
+    });
+
+    if (containerRef.current) {
+      resizeObserver.observe(containerRef.current);
+    }
+
+    return () => {
+      if (containerRef.current) resizeObserver.unobserve(containerRef.current);
+    };
+  }, []);
+
+  const markerColumnLayout = '1fr '.repeat(computedColumns).trim();
 
   return (
-    <div>
+    <div ref={containerRef}>
       <Box p={2} borderRadius={3} width="100%" bgcolor="background.paper" className="map-legend-container">
         <Box display="flex" alignItems="left" flexDirection={'column'}>
           <Box display="flex" justifyContent="space-between" alignItems="center">
@@ -62,10 +87,10 @@ export const MapLegend: React.FC<MapLegendProps> = ({ items, onSelect, title = '
 
         <Box
           display="grid"
-          gridTemplateColumns={isTwoColumn ? '1fr 1fr' : '1fr'}
+          gridTemplateColumns={markerColumnLayout}
           gap={1}
-          maxHeight={250}
-          overflow="auto"
+          maxHeight={150}
+          overflow="scroll"
         >
           {items.map((category) => {
             const selected = selectedIds.includes(category);

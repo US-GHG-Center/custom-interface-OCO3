@@ -38,12 +38,39 @@ export const SamInfoCard = ({
   const [maxValue, setMaxValue] = useState<number | string>('N/A');
   const [hov, setHov] = useState<boolean>(false);
 
+  const formatNumber = (input: number | string) => {
+    const num = Number(input);
+    if (isNaN(num)) return input.toString();
+
+    if (Math.abs(num) >= 1e5) {
+      return num.toExponential(2);
+    }
+    return Number(num.toFixed(3)).toString();
+  };
+
+  const extractDateTime = (input: string): string => {
+    // id: is in Format: <data-type>_<target_id>_<datetime>_<filter-status>_<ghg-type>. e.g. "oco3-co2_volcano0010_2025-03-30T232216Z_unfiltered_xco2"
+
+    const parts = input.split('_');
+
+    if (parts.length < 3) return 'null';
+    const datetimePart = parts.slice(-3)[0];
+
+    if (!datetimePart) return 'null';
+
+    const momentObj = moment.utc(datetimePart, 'YYYY-MM-DDTHHmmss[Z]', true);
+    if (momentObj.isValid()) {
+      return momentObj.format('MM/DD/YYYY, HH:mm:ss [UTC]');
+    }
+    return 'null';
+  };
+
   useEffect(() => {
     setHov(stacItem.id === hoveredVizid);
   }, [hoveredVizid, stacItem.id]);
 
   useEffect(() => {
-    let startDatetime: string = stacItem.properties.start_datetime;
+    let startDatetime: string = extractDateTime(stacItem.id);
     let endDatetime: string = stacItem.properties.end_datetime;
     let targetId: string = stacItem.properties.target_id;
     let targetName: string = stacItem.properties.target_name;
@@ -85,7 +112,7 @@ export const SamInfoCard = ({
         assets={assets}
       >
         <>
-          <Box sx={{ marginTop: '20px' }}>
+          <Box sx={{ marginTop: '20px', width: '100%' }}>
             {/* Target Group */}
             <Typography variant="body2" sx={{ mb: 0.5, color: 'var(--main-blue)' }}>SAM Details</Typography>
             <Box sx={{ display: 'flex', flexDirection: 'row', gap: 2, width: '100%' }}>
@@ -125,12 +152,12 @@ export const SamInfoCard = ({
               >
                 <Box sx={{ flex: 1 }}>
                   <CaptionValue caption="Min Value">
-                    {Number(minValue).toFixed(3)}
+                    {formatNumber(minValue as number)}
                   </CaptionValue>
                 </Box>
                 <Box sx={{ flex: 1 }}>
                   <CaptionValue caption="Max Value">
-                    {Number(maxValue).toFixed(3)}
+                    {formatNumber(maxValue as number)}
                   </CaptionValue>
                 </Box>
               </Box>
