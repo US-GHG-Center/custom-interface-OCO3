@@ -71,9 +71,9 @@ export class Oco3DataFactory extends DataFactory {
     return Object.keys(this.targetTypeDict);
   }
 
-  getVizItemForMarkerByTargetType(key: string[]): VizItem[] {
-    if (!this.targetTypeDict && !key.every(k => k in this.targetTypeDict)) return [];
-    return key.flatMap(k => this.targetTypeDict[k].map(
+  getVizItemForMarkerByTargetTypes(keys: string[]): VizItem[] {
+    if (!this.targetTypeDict && !keys.every(k => k in this.targetTypeDict)) return [];
+    return keys.flatMap(k => this.targetTypeDict[k].map(
       (target: Target): VizItem => target.getRepresentationalSAM()
     ));
   }

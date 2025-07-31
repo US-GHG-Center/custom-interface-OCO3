@@ -122,10 +122,10 @@ export function Dashboard({
     setZoomLocation([-98.771556, 32.967243]);
   }, []);
 
-  const handleSelectedTargetType = useCallback((targetType: string[]) => {
-    setSelectedTargetType(targetType);
-    
-    if (!targetType || targetType.length === 0) {
+  const handleSelectedTargetTypes = useCallback((targetTypes: string[]) => {
+    setSelectedTargetType(targetTypes);
+
+    if (!targetTypes || targetTypes.length === 0) {
       let repTargets: SAM[] = dataFactory.current?.getVizItemForMarker() || [];
       setTargets(repTargets);
       return;
@@ -133,7 +133,7 @@ export function Dashboard({
 
     if (!dataFactory.current) return;
     let repTargets: SAM[] =
-      dataFactory.current?.getVizItemForMarkerByTargetType(targetType) || [];
+      dataFactory.current?.getVizItemForMarkerByTargetTypes(targetTypes) || [];
     setTargets(repTargets);
   }, []);
 
@@ -241,7 +241,7 @@ export function Dashboard({
                 title={'SAM Type'}
                 description={'Click one or more SAM Type to filter.'}
                 items={targetTypes}
-                onSelect={handleSelectedTargetType}
+                onSelect={handleSelectedTargetTypes}
               />
             )}
             {VMAX && (
