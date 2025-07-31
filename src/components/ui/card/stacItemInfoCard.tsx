@@ -125,15 +125,15 @@ export function StacItemInfoCard({
     setId(id);
     setCollection(collection);
 
-    let coordinates: string[] = stacItem.geometry.coordinates[0][0];
-    setLon(Number(coordinates[0]));
-    setLat(Number(coordinates[1]));
+    let coordinates: number[] = stacItem.geometry.coordinates[0][0];
+    setLon(coordinates[0]);
+    setLat(coordinates[1]);
 
     let lvmin = VMIN || 400;
     let lvmax = VMAX || 420;
     let lcolormap = colorMap || 'plasma';
     let lassets = assets || 'rad';
-    const thumbnailUrl: string = `${process.env.REACT_APP_RASTER_API_URL}/collections/${collection}/items/${id}/preview.png?assets=${lassets}&rescale=${lvmin}%2C${lvmax}&colormap_name=${lcolormap}`;
+    const thumbnailUrl: string = `${process.env.REACT_APP_RASTER_API_URL}/collections/${collection}/items/${id}/preview.png?assets=${lassets}&rescale=${lvmin}%2C${lvmax}&colormap_name=${lcolormap}&nodata=nan`;
     setThumbnailUrl(thumbnailUrl);
 
     getBackgroundColorFromImage(thumbnailUrl, '#444', '#eee').then(color => {
@@ -157,7 +157,7 @@ export function StacItemInfoCard({
       onMouseLeave={handleMouseLeave}
       $isHovered={isHovered}
     >
-      <Box sx={{ display: 'flex', flexDirection: 'column', flex: '1 0 auto' }}>
+      <Box sx={{ display: 'flex', flexDirection: 'column', flex: '1 0 auto', width: '100%' }}>
         <CardContent sx={{ flex: '1 0 auto' }}>
           <Box sx={{ display: 'flex', flexDirection: 'row', flex: '1 0 auto', alignItems: 'top', justifyContent: 'space-between', marginBottom: '10px' }}>
             <div>
@@ -205,7 +205,9 @@ export function StacItemInfoCard({
                   padding: '10px',
                   borderRadius: '8px',
                   imageRendering: 'pixelated',
-                  backgroundColor: imgBgColor
+                  backgroundColor: imgBgColor,
+                  minWidth: '100px',
+                  minHeight: '100px',
                 }}
                 image={thumbnailUrl}
                 alt='Visualization Item image'

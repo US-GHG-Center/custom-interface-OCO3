@@ -38,12 +38,31 @@ export const SamInfoCard = ({
   const [maxValue, setMaxValue] = useState<number | string>('N/A');
   const [hov, setHov] = useState<boolean>(false);
 
+  const formatNumber = (input: number | string) => {
+    const num = Number(input);
+    if (isNaN(num)) return input.toString();
+
+    if (Math.abs(num) >= 1e5) {
+      return num.toExponential(2);
+    }
+    return Number(num.toFixed(3)).toString();
+  };
+
+  const extractDateTime = (input: string): string => {
+    const match = input.match(/\d{4}-\d{2}-\d{2}T\d{6}Z/);
+    if (!match) return 'null';
+
+    const momentObj = moment.utc(match[0], 'YYYY-MM-DDTHHmmss[Z]');
+    return momentObj.isValid() ? momentObj.format('MM/DD/YYYY, HH:mm:ss [UTC]') : 'null';
+  };
+
+
   useEffect(() => {
     setHov(stacItem.id === hoveredVizid);
   }, [hoveredVizid, stacItem.id]);
 
   useEffect(() => {
-    let startDatetime: string = stacItem.properties.start_datetime;
+    let startDatetime: string = extractDateTime(stacItem.id);
     let endDatetime: string = stacItem.properties.end_datetime;
     let targetId: string = stacItem.properties.target_id;
     let targetName: string = stacItem.properties.target_name;
@@ -85,7 +104,7 @@ export const SamInfoCard = ({
         assets={assets}
       >
         <>
-          <Box sx={{ marginTop: '20px' }}>
+          <Box sx={{ marginTop: '20px', width: '100%' }}>
             {/* Target Group */}
             <Typography variant="body2" sx={{ mb: 0.5, color: 'var(--main-blue)' }}>SAM Details</Typography>
             <Box sx={{ display: 'flex', flexDirection: 'row', gap: 2, width: '100%' }}>
@@ -125,12 +144,12 @@ export const SamInfoCard = ({
               >
                 <Box sx={{ flex: 1 }}>
                   <CaptionValue caption="Min Value">
-                    {Number(minValue).toFixed(3)}
+                    {formatNumber(minValue as number)}
                   </CaptionValue>
                 </Box>
                 <Box sx={{ flex: 1 }}>
                   <CaptionValue caption="Max Value">
-                    {Number(maxValue).toFixed(3)}
+                    {formatNumber(maxValue as number)}
                   </CaptionValue>
                 </Box>
               </Box>

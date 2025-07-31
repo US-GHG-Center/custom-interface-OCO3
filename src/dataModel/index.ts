@@ -1,24 +1,29 @@
-import { STACItem, DateTime, Lon, Lat } from './core';
-import { PlumeMeta, PlumeRegionMeta } from './plumeMeta';
+import { STACItem, DateTime, Lon, Lat, LocationMeta, Geometry } from './core';
 
-import { PlumeRegion, Plume, SubDailyPlume } from './plumes';
-
-import { SAM, Target } from './sams';
+import {
+  SAM,
+  Target,
+  STACItemSAM,
+  SAMMissingMetaData,
+  SAMProperties,
+} from './sams';
 
 // logically Plume and Target are analogous.
 
 export type {
-  PlumeRegion,
-  Plume,
-  SubDailyPlume,
   DateTime,
   Lon,
   Lat,
+  LocationMeta,
+  Geometry,
   STACItem,
-  PlumeMeta,
-  PlumeRegionMeta,
   SAM,
   Target,
+  SAMMissingMetaData,
+  SAMProperties,
+  STACItemSAM,
 };
 
-export interface VizItem extends STACItem {}
+export { SamsTarget } from './sams';
+
+export interface VizItem extends SAM {}
