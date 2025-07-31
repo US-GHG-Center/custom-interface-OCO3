@@ -157,7 +157,7 @@ export function StacItemInfoCard({
       onMouseLeave={handleMouseLeave}
       $isHovered={isHovered}
     >
-      <Box sx={{ display: 'flex', flexDirection: 'column', flex: '1 0 auto' }}>
+      <Box sx={{ display: 'flex', flexDirection: 'column', flex: '1 0 auto', width: '100%' }}>
         <CardContent sx={{ flex: '1 0 auto' }}>
           <Box sx={{ display: 'flex', flexDirection: 'row', flex: '1 0 auto', alignItems: 'top', justifyContent: 'space-between', marginBottom: '10px' }}>
             <div>
@@ -205,7 +205,9 @@ export function StacItemInfoCard({
                   padding: '10px',
                   borderRadius: '8px',
                   imageRendering: 'pixelated',
-                  backgroundColor: imgBgColor
+                  backgroundColor: imgBgColor,
+                  minWidth: '100px',
+                  minHeight: '100px',
                 }}
                 image={thumbnailUrl}
                 alt='Visualization Item image'
