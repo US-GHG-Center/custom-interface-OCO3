@@ -140,9 +140,8 @@ export function StacItemInfoCard({
       setImgBgColor(color);
     });
 
-    let firstAssetKey = Object.keys(stacItem.assets)[0];
-    let firstAsset = stacItem.assets[firstAssetKey];
-    setTiffUrl(firstAsset.href);
+    let s3BrowseBasedTiffUrl: string = `${process.env.REACT_APP_CLOUD_BROWSE_URL}/browseui/#${collection}/${id}.tif`
+    setTiffUrl(s3BrowseBasedTiffUrl);
   }, [stacItem, VMIN, VMAX, colorMap, assets]);
 
   useEffect(() => {
