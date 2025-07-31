@@ -49,11 +49,14 @@ export const SamInfoCard = ({
   };
 
   const extractDateTime = (input: string): string => {
-    const match = input.match(/\d{4}-\d{2}-\d{2}T\d{6}Z/);
-    if (!match) return 'null';
-
-    const momentObj = moment.utc(match[0], 'YYYY-MM-DDTHHmmss[Z]');
-    return momentObj.isValid() ? momentObj.format('MM/DD/YYYY, HH:mm:ss [UTC]') : 'null';
+    const parts = input.split('_');
+    for (const part of parts) {
+      const momentObj = moment.utc(part, 'YYYY-MM-DDTHHmmss[Z]', true);
+      if (momentObj.isValid()) {
+        return momentObj.format('MM/DD/YYYY, HH:mm:ss [UTC]');
+      }
+    }
+    return 'null';
   };
 
 
