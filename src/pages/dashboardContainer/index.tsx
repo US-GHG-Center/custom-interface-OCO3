@@ -3,10 +3,12 @@ import { useSearchParams } from 'react-router-dom';
 
 import { Dashboard } from '../dashboard';
 import { fetchAllFromSTACAPI } from '../../services/api';
+import { dataTransformation } from './helper/dataTransform';
 
-import { STACItem } from '../../dataModel';
+import { STACItem, SAMMissingMetaData } from '../../dataModel';
 
-import { ExampleDataFactory } from '../../exampleDataFactory';
+import missingProperties from '../../assets/dataset/metadata.json';
+import { Oco3DataFactory } from '../../oco3DataFactory';
 
 export function DashboardContainer(): React.JSX.Element {
   // get the query params
@@ -23,10 +25,10 @@ export function DashboardContainer(): React.JSX.Element {
       : null
   ); // let default zoom level be controlled by map component
   const [collectionId] = useState<string>(
-    searchParams.get('collection-id') || 'goes-ch4plume-v1'
+    searchParams.get('collection-id') || 'oco3-co2-sams-daygrid-v11r'
   );
   const [loadingData, setLoadingData] = useState<boolean>(true);
-  const dataFactory = useRef<ExampleDataFactory | null>(null);
+  const oco3DataFactory = useRef<Oco3DataFactory | null>(null);
 
   useEffect(() => {
     setLoadingData(true);
@@ -34,15 +36,14 @@ export function DashboardContainer(): React.JSX.Element {
     const fetchData = async () => {
       try {
         // get all the collection items
-        const collectionItemUrl: string = `${process.env.REACT_APP_STAC_API_URL}/collections/${collectionId}/items`;
+        // const collectionItemUrl: string = `${process.env.REACT_APP_STAC_API_URL}/collections/${collectionId}/items`;
+        const collectionItemUrl: string = `${process.env.PUBLIC_URL}/${collectionId}.json`; // This file is created and updated by a workflow task
         const data: STACItem[] = await fetchAllFromSTACAPI(collectionItemUrl);
-
-        const exampleDataFactory: ExampleDataFactory = ExampleDataFactory.getInstance();
-        const testSample: STACItem[] = data.slice(0, 10);
-        testSample.forEach((item) => {
-          exampleDataFactory.addVizItem(item);
-        });
-        dataFactory.current = exampleDataFactory;
+        const filteredData: STACItem[] = data.filter(
+          (item: STACItem) => !item.id.includes('unfiltered')
+        );
+        const missingData: SAMMissingMetaData[] = missingProperties.data;
+        oco3DataFactory.current = dataTransformation(filteredData, missingData);
         // NOTE: incase we need metadata and other added information,
         // add that to the STAC Item Property
 
@@ -58,7 +59,7 @@ export function DashboardContainer(): React.JSX.Element {
 
   return (
     <Dashboard
-      dataFactory={dataFactory}
+      dataFactory={oco3DataFactory}
       zoomLocation={zoomLocation}
       zoomLevel={zoomLevel}
       setZoomLocation={setZoomLocation}

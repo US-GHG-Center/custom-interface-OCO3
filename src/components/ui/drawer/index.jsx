@@ -90,8 +90,8 @@ export function PersistentDrawerRight({ open, header, body, cardRef }) {
             width: drawerWidth,
             marginRight: '5px',
             marginTop: '5px',
-            maxHeight: 'calc(100vh - 10px)', //colobar is up 3% from bottom
-            height: 'auto',
+            maxHeight: 'calc(100vh - 10px)',
+            height: 'calc(100vh - 10px)',
             borderRadius: '12px',
           },
         }}
