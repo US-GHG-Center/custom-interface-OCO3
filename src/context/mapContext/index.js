@@ -8,7 +8,7 @@ const MapboxContext = createContext();
 const accessToken = process.env.REACT_APP_MAPBOX_TOKEN;
 const mapboxStyleBaseUrl = process.env.REACT_APP_MAPBOX_STYLE_URL;
 const BASEMAP_STYLES_MAPBOX_ID =
-  process.env.REACT_APP_BASEMAP_STYLES_MAPBOX_ID || 'cldu1cb8f00ds01p6gi583w1m';
+  process.env.REACT_APP_BASEMAP_STYLES_MAPBOX_ID || '';
 
 export const MapboxProvider = ({ children }) => {
   const mapContainer = useRef(null);

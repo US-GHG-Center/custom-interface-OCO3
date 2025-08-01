@@ -17,11 +17,11 @@ export const PopularMapMarkerColors = [
 ];
 
 export const MarkerColorMapping = {
-  volcano: rgb(244, 91, 91),
+  volcano: rgb(238, 123, 123),
   validation: rgb(241, 174, 39),
-  fossil: rgb(78, 138, 222),
-  calibration: rgb(113, 123, 59),
-  desert: rgb(83, 174, 121),
-  sif_high: rgb(141, 58, 174),
-  sif_low: rgb(231, 108, 227),
+  fossil: rgb(104, 172, 199),
+  calibration: rgb(146, 156, 88),
+  desert: rgb(112, 182, 141),
+  sif_high: rgb(141, 113, 201),
+  sif_low: rgb(226, 135, 223),
 };
