@@ -63,7 +63,7 @@ export const ConfigurableColorBar = ({
               {currColorMap.replace(/_r/g, '')}
             </span>
             <span style={{ fontSize: '0.8rem', color: '#666' }}>
-              {isReversed ? 'Reversed' : 'Normal'}
+              {isReversed ? 'Reversed' : ''}
             </span>
           </div>
           
