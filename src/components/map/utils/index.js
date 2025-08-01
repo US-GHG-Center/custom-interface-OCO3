@@ -1,4 +1,4 @@
-import { PopularMapMarkerColors } from "./constants";
+import { MarkerColorMapping, PopularMapMarkerColors } from "./constants";
 import { stringToNumberHash } from '../../../utils';
 
 /*
@@ -134,11 +134,22 @@ export const addSourcePolygonToMap = (
 };
 
 
-/* Returns a color based on the category.
-   Uses a hash function to map the category to an index in the PopularMapMarkerColors array
-*/
+/**
+ * Returns a color based on the category.
+ * Priority: MarkerColorMapping -> PopularMapMarkerColors (via hash fallback)
+ */
 export function getMarkerColor(category) {
-  if (!category) return PopularMapMarkerColors[0]; // Default color if no category is provided
+  if (!category) return PopularMapMarkerColors[0];
+
+  // Normalize: remove text in parentheses and trim
+  const normalizedCategory = category.replace(/\s*\(.*?\)\s*/g, '').trim().toLowerCase();
+
+  // Check predefined constant colors
+  if (MarkerColorMapping[normalizedCategory]) {
+    return MarkerColorMapping[normalizedCategory];
+  }
+
+  // Fallback using original category for hashing
   const colorIdx = stringToNumberHash(category) % PopularMapMarkerColors.length;
   return PopularMapMarkerColors[colorIdx];
 }
