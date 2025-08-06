@@ -121,6 +121,7 @@ export function Dashboard({
     setHoveredVizLayerId('');
     setActiveVizLayerId('');
     setOpenDrawer(false);
+    setSelectedTargetType([]);
     setZoomLevel(4);
     setZoomLocation([-98.771556, 32.967243]);
   }, []);
@@ -243,6 +244,7 @@ export function Dashboard({
                 title={'SAM Type'}
                 description={'Click one or more SAM Type to filter.'}
                 items={targetTypes}
+                selectedIds={selectedTargetType}
                 onSelect={handleSelectedTargetTypes}
               />
             )}
