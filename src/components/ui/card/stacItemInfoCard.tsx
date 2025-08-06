@@ -163,7 +163,7 @@ export function StacItemInfoCard({
               <Typography variant="body2" sx={{ mb: 0.5, color: 'var(--main-blue)' }}>STAC Details</Typography>
               <HorizontalLayout>
                 <CaptionValue
-                  caption='Visualization Item ID'
+                  caption='Item ID'
                   className=''
                 ><TruncatedCopyText text={id} maxLength={25} /></CaptionValue>
               </HorizontalLayout>
