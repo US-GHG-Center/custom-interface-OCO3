@@ -65,7 +65,7 @@ export function Dashboard({
   //color map
   const [VMAX, setVMAX] = useState<number>(420);
   const [VMIN, setVMIN] = useState<number>(400);
-  const [colormap, setColormap] = useState<string>('viridis');
+  const [colormap, setColormap] = useState<string>('magma');
   const [assets, setAssets] = useState<string>('xco2');
   // targets based on target type
   const [targetTypes, setTargetTypes] = useState<string[]>([]);
@@ -168,7 +168,7 @@ export function Dashboard({
     // also few extra things for the application state. We can receive it from collection json.
     const VMIN = 400;
     const VMAX = 420;
-    const colormap: string = 'viridis';
+    const colormap: string = 'magma';
     setVMIN(VMIN);
     setVMAX(VMAX);
     setColormap(colormap);
@@ -255,7 +255,7 @@ export function Dashboard({
                 setColorMap={setColormap}
                 setVMIN={setVMIN}
                 setVMAX={setVMAX}
-                unit='Measurement Unit'
+                unit='parts per million (ppm)'
               />
             )}
           </div>
