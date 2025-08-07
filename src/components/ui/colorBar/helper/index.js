@@ -72,13 +72,16 @@ export const createColorbar = (
 
 function generateScale(min, max, step) {
   const numbers = [];
-  for (let i = min; i <= max; i += step) {
-    if (Number(i) % 1 !== 0) {
-      numbers.push(Number(i).toFixed(2));
+  for (let i = min; i <= max + step / 10; i += step) {
+    const value = Number(i.toFixed(10));
+    if (value % 1 !== 0) {
+      numbers.push(value.toFixed(2));
     } else {
-      numbers.push(i);
+      numbers.push(value);
     }
   }
-  numbers[numbers.length - 1] += '+';
+  if (numbers.length > 0) {
+    numbers[numbers.length - 1] = String(numbers[numbers.length - 1]) + '+';
+  }
   return numbers;
 }

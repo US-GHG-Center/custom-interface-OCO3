@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback, useRef } from 'react';
 import mapboxgl from 'mapbox-gl';
 import { useMapbox } from '../../../context/mapContext';
 import './index.css';
-import { ZOOM_LEVEL_MARGIN  } from '../utils/constants';
+import { ZOOM_LEVEL_MARGIN } from '../utils/constants';
 import { getMarkerColor } from '../utils';
 
 
@@ -108,7 +108,7 @@ export const MarkerFeature = ({ vizItems, onClickOnMarker }) => {
  * @param {string} [strokeColor='#000000'] - Optional stroke color.
  * @returns {string} SVG string to be injected into the DOM.
  */
-const getMarkerSVG = (color, strokeColor = '#000000') => {
+const getMarkerSVG = (color, strokeColor = 'rgba(0, 0, 0, 0)') => {
   return `
     <svg fill="${color}" width="30px" height="30px" viewBox="-51.2 -51.2 614.40 614.40" xmlns="http://www.w3.org/2000/svg">
       <g id="SVGRepo_bgCarrier" stroke-width="0"></g>

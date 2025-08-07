@@ -11,21 +11,21 @@ import RoomIcon from '@mui/icons-material/Room';
 import ClearAllIcon from '@mui/icons-material/ClearAll';
 
 import { getMarkerColor } from '../utils';
-import { titleCase } from '../../../utils';
+import { capitalizeFirstLetter } from '../../../utils';
 
 import './index.css';
 
 
 interface MapLegendProps {
   items: string[];
+  selectedIds: string[];
   onSelect: (ids: string[]) => void;
   title: string;
   description: string;
   numColumns?: number | null;
 }
 
-export const MapLegend: React.FC<MapLegendProps> = ({ items, onSelect, title = '', description = '', numColumns = null }) => {
-  const [selectedIds, setSelectedIds] = useState<string[]>([]);
+export const MapLegend: React.FC<MapLegendProps> = ({ items, selectedIds, onSelect, title = '', description = '', numColumns = null }) => {
   const [computedColumns, setComputedColumns] = useState(1);
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -33,12 +33,10 @@ export const MapLegend: React.FC<MapLegendProps> = ({ items, onSelect, title = '
     const newSelected = selectedIds.includes(id)
       ? selectedIds.filter((sid) => sid !== id)
       : [...selectedIds, id];
-    setSelectedIds(newSelected);
     onSelect(newSelected);
   };
 
   const clearFilter = () => {
-    setSelectedIds([]);
     onSelect([]);
   };
 
@@ -103,7 +101,7 @@ export const MapLegend: React.FC<MapLegendProps> = ({ items, onSelect, title = '
               >
                 <RoomIcon htmlColor={getMarkerColor(category)} sx={{ mr: 1 }} />
                 <Typography variant="body2" sx={{ whiteSpace: 'nowrap' }}>
-                  {titleCase(category)}
+                  {capitalizeFirstLetter(category)}
                 </Typography>
               </ButtonBase>
             );

@@ -58,13 +58,14 @@ export function Dashboard({
   // states for data
   const [targets, setTargets] = useState<VizItem[]>([]);
   const [hoveredVizLayerId, setHoveredVizLayerId] = useState<string>(''); // vizItem_id of the visualization item which was hovered over
+  const [activeVizLayerId, setActiveVizLayerId] = useState<string>(''); // vizItem_id of the visualization item which was clicked on
   const [filteredVizItems, setFilteredVizItems] = useState<VizItem[]>([]); // visualization items for the selected region with the filter applied
   const [visualizationLayers, setVisualizationLayers] = useState<VizItem[]>([]); //all visualization items for the selected region (marker) // TODO: make it take just one instead of a list.
   const [selectedSams, setSelectedSams] = useState<VizItem[]>([]); // this represents the sams, when a target is selected.
   //color map
   const [VMAX, setVMAX] = useState<number>(420);
   const [VMIN, setVMIN] = useState<number>(400);
-  const [colormap, setColormap] = useState<string>('viridis');
+  const [colormap, setColormap] = useState<string>('magma');
   const [assets, setAssets] = useState<string>('xco2');
   // targets based on target type
   const [targetTypes, setTargetTypes] = useState<string[]>([]);
@@ -101,11 +102,12 @@ export function Dashboard({
     setZoomLevel(null); // take the default zoom level
     setOpenDrawer(true);
     setHoveredVizLayerId(vizItemId);
+    setActiveVizLayerId(vizItemId);
   }, []);
 
   const handleSelectedVizLayer = useCallback((vizItemId: string) => {
     if (!vizItemId) return;
-    // currently no functionality needed.
+    setActiveVizLayerId(vizItemId);
   }, []);
 
   const handleResetHome = useCallback(() => {
@@ -117,7 +119,9 @@ export function Dashboard({
     setSelectedSams([]);
     setFilteredVizItems(repTargets);
     setHoveredVizLayerId('');
+    setActiveVizLayerId('');
     setOpenDrawer(false);
+    setSelectedTargetType([]);
     setZoomLevel(4);
     setZoomLocation([-98.771556, 32.967243]);
   }, []);
@@ -144,6 +148,7 @@ export function Dashboard({
       dataFactory.current?.getVizItemByVizId(vizItemId);
     if (changedVizItem) setVisualizationLayers([changedVizItem]);
     setHoveredVizLayerId(vizItemId);
+    setActiveVizLayerId(vizItemId);
   }, []);
 
   const handleHoverOverSelectedSams = useCallback((vizItemId: string) => {
@@ -164,7 +169,7 @@ export function Dashboard({
     // also few extra things for the application state. We can receive it from collection json.
     const VMIN = 400;
     const VMAX = 420;
-    const colormap: string = 'viridis';
+    const colormap: string = 'magma';
     setVMIN(VMIN);
     setVMAX(VMAX);
     setColormap(colormap);
@@ -219,16 +224,14 @@ export function Dashboard({
             <div className='title-content'>
               {selectedSams.length ? (
                 <HorizontalLayout>
-                  {/* <div className={"sandesh"} style={{ margin: '0 0.9rem' }}> */}
                   <VizItemTimeline
                     vizItems={selectedSams}
                     onVizItemSelect={handleTimelineTimeChange}
-                    activeItemId={hoveredVizLayerId}
+                    activeItemId={activeVizLayerId}
                     onVizItemHover={handleHoverOverSelectedSams}
                     hoveredItemId={hoveredVizLayerId}
                     title='Timeline'
                   />
-                  {/* </div> */}
                 </HorizontalLayout>
               ) : (
                 <></>
@@ -241,6 +244,7 @@ export function Dashboard({
                 title={'SAM Type'}
                 description={'Click one or more SAM Type to filter.'}
                 items={targetTypes}
+                selectedIds={selectedTargetType}
                 onSelect={handleSelectedTargetTypes}
               />
             )}
@@ -253,7 +257,7 @@ export function Dashboard({
                 setColorMap={setColormap}
                 setVMIN={setVMIN}
                 setVMAX={setVMAX}
-                unit='Measurement Unit'
+                unit='parts per million (ppm)'
               />
             )}
           </div>

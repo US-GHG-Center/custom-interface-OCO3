@@ -9,6 +9,7 @@ import {
 } from './stacItemInfoCard';
 
 import { TruncatedCopyText } from '../truncatedText';
+import { capitalizeFirstLetter } from '../../../utils';
 
 interface SamInfoCardProps extends StacItemInfoCardProps {
   hoveredVizid: string;
@@ -126,8 +127,12 @@ export const SamInfoCard = ({
 
               {/* Right Group: 25% width, column layout */}
               <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 1 }}>
-                <CaptionValue caption="SAM Type">{targetType}</CaptionValue>
-                <CaptionValue caption="SAM Altitude">{targetAltitude}</CaptionValue>
+                <CaptionValue caption="SAM Type">
+                  {targetType ? capitalizeFirstLetter(targetType) : 'N/A'}
+                </CaptionValue>
+                <CaptionValue caption="SAM Altitude">
+                  {Number(targetAltitude) ? targetAltitude + ' m' : 'N/A'}
+                </CaptionValue>
               </Box>
             </Box>
 
