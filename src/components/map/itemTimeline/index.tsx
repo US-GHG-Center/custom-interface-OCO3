@@ -62,8 +62,15 @@ export const VizItemTimeline = ({
   const transformRef = useRef<d3.ZoomTransform>(d3.zoomIdentity);
   const containerRef = useRef<HTMLDivElement | null>(null);
 
+  /* 
+    Refs to track user interactions with the timeline points
+    These refs help distinguish between user clicks/hover on the timeline itself
+    vs programmatic changes (e.g., using the "Next" button, or when the activeItemId changes)
+  */
   const userClickedIdRef = useRef<string | null>(null);
   const userHoveredIdRef = useRef<string | null>(null);
+
+  // Ref to track the currently hovered item ID
   const hoveredItemIdRef = useRef<string | null>(null);
 
 
