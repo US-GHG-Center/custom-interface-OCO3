@@ -88,16 +88,9 @@ export function Dashboard({
       dataFactory.current?.getVizItemsOnMarkerClicked(targetId) || [];
 
     let placeHolderSam: SAM = candidateSams[0];
-    placeHolderSam.geometry.coordinates = [
-      [placeHolderSam.properties.target_location.coordinates],
-    ];
-
     setVisualizationLayers([placeHolderSam]);
     setSelectedSams(candidateSams);
-    let location: number[] = [
-      Number(candidateSams[0].geometry.coordinates[0][0][0]),
-      Number(candidateSams[0].geometry.coordinates[0][0][1]),
-    ];
+    let location: number[] = placeHolderSam.properties.target_location.coordinates;
     setZoomLocation(location);
     setZoomLevel(null); // take the default zoom level
     setOpenDrawer(true);

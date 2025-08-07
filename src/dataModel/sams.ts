@@ -141,7 +141,8 @@ export class SamsTarget implements Target {
     if (!this.isSamSorted) {
       this.inplaceSort(this.sams);
     }
-    let repSam: SAM = this.sams[0];
+    let repSam: SAM = JSON.parse(JSON.stringify(this.sams[0])); // deep copy as it is only needed for marker,
+    // and this correction of marker position is only needed for marker
     repSam.geometry.coordinates = [
       [repSam.properties.target_location.coordinates],
     ];
