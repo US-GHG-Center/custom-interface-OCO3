@@ -126,8 +126,12 @@ export const SamInfoCard = ({
 
               {/* Right Group: 25% width, column layout */}
               <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 1 }}>
-                <CaptionValue caption="SAM Type">{targetType}</CaptionValue>
-                <CaptionValue caption="SAM Altitude">{targetAltitude}</CaptionValue>
+                <CaptionValue caption="SAM Type">
+                  {targetType ? targetType : 'N/A'}
+                </CaptionValue>
+                <CaptionValue caption="SAM Altitude">
+                  {targetAltitude != null ? targetAltitude : 'N/A'}
+                </CaptionValue>
               </Box>
             </Box>
 
