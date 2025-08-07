@@ -11,7 +11,7 @@ import RoomIcon from '@mui/icons-material/Room';
 import ClearAllIcon from '@mui/icons-material/ClearAll';
 
 import { getMarkerColor } from '../utils';
-import { titleCase } from '../../../utils';
+import { capitalizeFirstLetter } from '../../../utils';
 
 import './index.css';
 
@@ -101,7 +101,7 @@ export const MapLegend: React.FC<MapLegendProps> = ({ items, selectedIds, onSele
               >
                 <RoomIcon htmlColor={getMarkerColor(category)} sx={{ mr: 1 }} />
                 <Typography variant="body2" sx={{ whiteSpace: 'nowrap' }}>
-                  {titleCase(category)}
+                  {capitalizeFirstLetter(category)}
                 </Typography>
               </ButtonBase>
             );

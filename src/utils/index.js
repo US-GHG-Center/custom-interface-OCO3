@@ -60,3 +60,12 @@ export async function getBackgroundColorFromImage(
     return lightBgColor;
   }
 }
+
+
+/* 
+  Capitalizes the first letter of a string
+*/
+export function capitalizeFirstLetter(text) {
+  if (!text) return '';
+  return text.charAt(0).toUpperCase() + text.slice(1);
+}
