@@ -1,5 +1,23 @@
 import * as d3 from 'd3';
 
+const gistEarthColors = [
+  "#000000", "#00274D", "#26466D", "#4D657D", "#73948D",
+  "#B3B37D", "#E6C26D", "#F2E6CE", "#FFFFFF"
+];
+
+const gistEarth = (t) => {
+  const clamped = Math.max(0, Math.min(1, t));
+  const scaled = clamped * (gistEarthColors.length - 1);
+  const index = Math.floor(scaled);
+  const fraction = scaled - index;
+  
+  if (index >= gistEarthColors.length - 1) {
+    return gistEarthColors[gistEarthColors.length - 1];
+  }
+  
+  return d3.interpolate(gistEarthColors[index], gistEarthColors[index + 1])(fraction);
+};
+
 export const COLOR_MAP = {
   rdylgn: d3.interpolateRdYlGn, //imerg
   rdylgn_r: (t) => d3.interpolateRdYlGn(1 - t), //imerg
@@ -17,8 +35,8 @@ export const COLOR_MAP = {
   magma_r: (t) => d3.interpolateMagma(1 - t),
   reds: d3.interpolateReds,
   reds_r: (t) => d3.interpolateReds(1 - t),
-  gist_earth: (t) => d3.interpolateGreys(1 - t), // (reversed)
-  gist_earth_r: d3.interpolateGreys, // (reversed)
+  gist_earth: gistEarth,
+  gist_earth_r: (t) => gistEarth(1 - t),
 };
 
 export const createColorbar = (
