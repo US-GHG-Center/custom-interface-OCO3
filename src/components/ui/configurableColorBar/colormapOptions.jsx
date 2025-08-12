@@ -18,33 +18,46 @@ import IconButton from '@mui/material/IconButton';
 
 import './index.css';
 
+/**
+ * ColormapOptions component for configuring parameters of configurable color bar.
+ *
+ * @param {number} localVMin - Current committed minimum value for the visualization range.
+ * @param {number} localVMax - Current committed maximum value for the visualization range.
+ * @param {number} minLimit  - Absolute minimum limit allowed for the slider/input.
+ * @param {number} maxLimit  - Absolute maximum limit allowed for the slider/input.
+ * @param {string} colorMap  - Current colormap name (e.g., 'viridis', 'turbo', optionally with '_r' for reverse).
+ * @param {function} setLocalVMAX - Callback to update the committed maximum value in the parent component.
+ * @param {function} setLocalVMIN - Callback to update the committed minimum value in the parent component.
+ * @param {function} setSelColorMap - Callback to update the selected colormap in the parent component.
+ * @param {function} setIsReverse   - Callback to toggle reverse mode in the parent component.
+ */
 export const ColormapOptions = ({
-  currentMin,
-  currentMax,
+  localVMin,
+  localVMax,
   minLimit,
   maxLimit,
   colorMap,
-  setCurrVMAX,
-  setCurrVMIN,
+  setLocalVMAX,
+  setLocalVMIN,
   setSelColorMap,
   setIsReverse,
 }) => {
 
   // committed values (drive UI & outputs)
-  const [minValue, setMinValue] = useState(currentMin);
-  const [maxValue, setMaxValue] = useState(currentMax);
+  const [minValue, setMinValue] = useState(localVMin);
+  const [maxValue, setMaxValue] = useState(localVMax);
 
   // editable text inputs (don’t validate while typing)
-  const [minInput, setMinInput] = useState(String(currentMin));
-  const [maxInput, setMaxInput] = useState(String(currentMax));
+  const [minInput, setMinInput] = useState(String(localVMin));
+  const [maxInput, setMaxInput] = useState(String(localVMax));
 
   // slider display values during drag (don’t commit until mouseup)
   const [sliderVals, setSliderVals] = useState([minLimit, maxLimit]);
 
   // slider range is stable while dragging; expands only on commit
   const [range, setRange] = useState([
-    Math.min(minLimit, currentMin),
-    Math.max(maxLimit, currentMax),
+    Math.min(minLimit, localVMin),
+    Math.max(maxLimit, localVMax),
   ]);
 
   const [reverse, setReverse] = useState(false);
@@ -55,16 +68,16 @@ export const ColormapOptions = ({
 
   // sync when parent updates current range
   useEffect(() => {
-    setMinValue(currentMin);
-    setMaxValue(currentMax);
-    setMinInput(String(currentMin));
-    setMaxInput(String(currentMax));
-    setSliderVals([currentMin, currentMax]);
+    setMinValue(localVMin);
+    setMaxValue(localVMax);
+    setMinInput(String(localVMin));
+    setMaxInput(String(localVMax));
+    setSliderVals([localVMin, localVMax]);
     setRange((r) => ([
-      Math.min(minLimit, r[0], currentMin),
-      Math.max(maxLimit, r[1], currentMax),
+      Math.min(minLimit, r[0], localVMin),
+      Math.max(maxLimit, r[1], localVMax),
     ]));
-  }, [currentMin, currentMax, minLimit, maxLimit]);
+  }, [localVMin, localVMax, minLimit, maxLimit]);
 
   // Text inputs for slider range (validate on blur / Enter)
   const handleMinChange = (e) => {
@@ -91,7 +104,7 @@ export const ColormapOptions = ({
     setSliderVals(([_, r]) => [v, r]);
     // expand range only if needed
     setRange(([lo, hi]) => [Math.min(lo, v, minLimit), Math.max(hi, maxValue)]);
-    setCurrVMIN?.(v);
+    setLocalVMIN?.(v);
   };
 
   const commitMax = () => {
@@ -108,7 +121,7 @@ export const ColormapOptions = ({
     setMaxValue(v);
     setSliderVals(([l, _]) => [l, v]);
     setRange(([lo, hi]) => [Math.min(lo, minValue), Math.max(hi, v, maxLimit)]);
-    setCurrVMAX?.(v);
+    setLocalVMAX?.(v);
   };
 
   const onKeyDownCommit = (e, which) => {
@@ -133,8 +146,8 @@ export const ColormapOptions = ({
     if (l === r) return;
     setMinValue(l);
     setMaxValue(r);
-    setCurrVMIN?.(l);
-    setCurrVMAX?.(r);
+    setLocalVMIN?.(l);
+    setLocalVMAX?.(r);
     // Keep the displayed range stable; only expand if out-of-bounds
     setRange(([lo, hi]) => [Math.min(lo, l), Math.max(hi, r)]);
   };
@@ -155,11 +168,11 @@ export const ColormapOptions = ({
   const handleReset = () => {
     setMinValue(minLimit);
     setMinInput(String(minLimit));
-    setCurrVMIN(minLimit);
+    setLocalVMIN(minLimit);
 
     setMaxValue(maxLimit);
     setMaxInput(String(maxLimit));
-    setCurrVMAX(maxLimit);
+    setLocalVMAX(maxLimit);
 
     setSliderVals([minLimit, maxLimit]);
     setRange([minLimit, maxLimit]);
