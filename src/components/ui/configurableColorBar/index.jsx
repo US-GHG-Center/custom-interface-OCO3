@@ -16,19 +16,24 @@ import { ColorBar } from '../colorBar';
 
 import './index.css';
 
-/*
+/**
+ * @typedef {Object} ConfigurableColorBarProps
+ * @property {string} id - Unique identifier for this color bar instance.
+ * @property {number} VMINLimit - Absolute minimum value allowed for the color scale.
+ * @property {number} VMAXLimit - Absolute maximum value allowed for the color scale.
+ * @property {string} colorMap - Initial colormap name (e.g., 'magma', 'viridis').
+ * @property {(v: number) => void} setVMIN - Callback to update the committed minimum value.
+ * @property {(v: number) => void} setVMAX - Callback to update the committed maximum value.
+ * @property {(v: string) => void} setColorMap - Callback to update the colormap.
+ * @property {string} [unit] - Optional unit label displayed under the color bar.
+ */
+
+/**
  * ConfigurableColorBar component for displaying and customizing a color scale.
  * Includes controls for adjusting the range (VMIN/VMAX), selecting a colormap,
  * and toggling reverse mode.
- *
- * @param {string} id - Unique identifier for this color bar instance.
- * @param {number} VMINLimit - Absolute minimum value allowed for the color scale.
- * @param {number} VMAXLimit - Absolute maximum value allowed for the color scale.
- * @param {string} colorMap - Initial colormap name (e.g., 'magma', 'viridis', 'turbo', optionally with '_r' for reverse).
- * @param {function} setVMIN - Callback to update the committed minimum value in the parent component.
- * @param {function} setVMAX - Callback to update the committed maximum value in the parent component.
- * @param {function} setColorMap - Callback to update the colormap in the parent component.
- * @param {string} [unit=''] - Optional unit label displayed under the color bar.
+ * 
+ * @param {ConfigurableColorBarProps} props
  */
 export const ConfigurableColorBar = ({ 
     id,
