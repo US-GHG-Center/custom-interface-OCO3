@@ -160,7 +160,7 @@ export function StacItemInfoCard({
         <CardContent sx={{ flex: '1 0 auto' }}>
           <Box sx={{ display: 'flex', flexDirection: 'row', flex: '1 0 auto', alignItems: 'top', justifyContent: 'space-between', marginBottom: '10px' }}>
             <div>
-              <Typography variant="body2" sx={{ mb: 0.5, color: 'var(--main-blue)' }}>STAC Details</Typography>
+              <Typography variant="body2" sx={{ mb: 0.5, color: 'var(--main-blue)' }}>File Details</Typography>
               <HorizontalLayout>
                 <CaptionValue
                   caption='Item ID'

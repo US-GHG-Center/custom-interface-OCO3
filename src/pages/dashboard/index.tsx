@@ -28,7 +28,7 @@ import { Oco3DataFactory } from '../../oco3DataFactory';
 import './index.css';
 
 const TITLE: string = 'OCO-3 Carbon Dioxide Snapshot Area Maps';
-const DESCRIPTION: string = `OCO-3’s Snapshot Area Mapping (SAM) mode is a unique mode of operation that allows OCO-3 on the ISS to quickly scan large areas (80 km x 80 km) and collect data over specific targets, like urban areas, megacities and volcanoes. Shown here are SAMs of atmospheric CO2, processed with the ACOS CO2 retrieval algorithm version 11R.`;
+const DESCRIPTION: string = `OCO-3’s Snapshot Area Mapping (SAM) mode is a unique mode of operation that allows OCO-3 on the ISS to quickly scan large areas (80 km x 80 km) and collect data over specific targets, like urban areas, megacities and volcanoes. Shown here are SAMs of atmospheric CO₂, processed with the ACOS CO₂ retrieval algorithm version 11R.`;
 
 const HorizontalLayout = styled.div`
   width: 90%;
