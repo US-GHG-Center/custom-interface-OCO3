@@ -18,7 +18,7 @@ import IconButton from '@mui/material/IconButton';
 
 import './index.css';
 
-/**
+/*
  * ColormapOptions component for configuring parameters of configurable color bar.
  *
  * @param {number} localVMin - Current committed minimum value for the visualization range.

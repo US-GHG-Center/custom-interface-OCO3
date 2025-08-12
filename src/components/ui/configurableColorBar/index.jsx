@@ -16,7 +16,7 @@ import { ColorBar } from '../colorBar';
 
 import './index.css';
 
-/**
+/*
  * ConfigurableColorBar component for displaying and customizing a color scale.
  * Includes controls for adjusting the range (VMIN/VMAX), selecting a colormap,
  * and toggling reverse mode.

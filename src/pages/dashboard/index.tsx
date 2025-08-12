@@ -248,14 +248,14 @@ export function Dashboard({
             )}
             {VMAX && (
               <ConfigurableColorBar
-                id='configurable-color-bar'
+                id={'configurable-color-bar'}
                 VMAXLimit={DEFAULT_VMAX}
                 VMINLimit={DEFAULT_VMIN}
                 colorMap={DEFAULT_COLOR_MAP}
                 setColorMap={setColormap}
                 setVMIN={setVMIN}
                 setVMAX={setVMAX}
-                unit='parts per million (ppm)'
+                unit={'parts per million (ppm)'}
               />
             )}
           </div>
