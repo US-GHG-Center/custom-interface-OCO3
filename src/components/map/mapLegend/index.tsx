@@ -74,7 +74,8 @@ export const MapLegend: React.FC<MapLegendProps> = ({ items, selectedIds, onSele
             <Typography className='map-legend-title'>{title}</Typography>
             <Tooltip title="Clear Filter">
               <ButtonBase className="clear-filter-button" onClick={clearFilter} sx={{ color: 'text.secondary' }}>
-                <Typography variant="body2" sx={{ mr: 1 }}>Clear filters </Typography><ClearAllIcon fontSize="medium" />
+                <Typography variant="body2" sx={{ mr: 1 }}>Clear filters </Typography>
+                {/* <ClearAllIcon fontSize="medium" /> */}
               </ButtonBase>
             </Tooltip>
           </Box>
