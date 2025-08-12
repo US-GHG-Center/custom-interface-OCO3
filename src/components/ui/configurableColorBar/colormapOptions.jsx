@@ -187,9 +187,11 @@ export const ColormapOptions = ({
             />
           </Box>
           <Box>
-            <IconButton size="small" onClick={handleReset}>
-              <ResetIcon fontSize="small" />
-            </IconButton>
+            <Tooltip title="Reset to default values">
+              <IconButton size="small" onClick={handleReset}>
+                <ResetIcon fontSize="small" />
+              </IconButton>
+            </Tooltip>
           </Box>
         </Box>
       </Box>
