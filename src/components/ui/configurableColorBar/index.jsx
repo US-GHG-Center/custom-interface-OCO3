@@ -13,7 +13,6 @@ import CloseIcon from '@mui/icons-material/Close';
 
 import { ColormapOptions } from './colormapOptions';
 import { ColorBar } from '../colorBar';
-import { Padding } from "@mui/icons-material";
 
 import './index.css';
 
@@ -82,8 +81,10 @@ export const ConfigurableColorBar = ({
       </AccordionSummary>
       <AccordionDetails className="configurable-colorbar-details">
         <ColormapOptions
-          VMIN={VMINLimit}
-          VMAX={VMAXLimit}
+          currentMin={currVMIN}
+          currentMax={currVMAX}
+          minLimit={VMINLimit}
+          maxLimit={VMAXLimit}
           colorMap={colorMap}
           setCurrVMAX={setCurrVMAX}
           setCurrVMIN={setCurrVMIN}

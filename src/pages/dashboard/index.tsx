@@ -55,6 +55,11 @@ export function Dashboard({
   setZoomLevel,
   loadingData,
 }: DashboardProps) {
+  // default values
+  const DEFAULT_COLOR_MAP = 'magma'; // default color map for the visualization layers
+  const DEFAULT_VMIN = 400; // default minimum value for the color bar
+  const DEFAULT_VMAX = 420; // default maximum value for the color bar
+
   // states for data
   const [targets, setTargets] = useState<VizItem[]>([]);
   const [hoveredVizLayerId, setHoveredVizLayerId] = useState<string>(''); // vizItem_id of the visualization item which was hovered over
@@ -63,9 +68,9 @@ export function Dashboard({
   const [visualizationLayers, setVisualizationLayers] = useState<VizItem[]>([]); //all visualization items for the selected region (marker) // TODO: make it take just one instead of a list.
   const [selectedSams, setSelectedSams] = useState<VizItem[]>([]); // this represents the sams, when a target is selected.
   //color map
-  const [VMAX, setVMAX] = useState<number>(420);
-  const [VMIN, setVMIN] = useState<number>(400);
-  const [colormap, setColormap] = useState<string>('magma');
+  const [VMAX, setVMAX] = useState<number>(DEFAULT_VMAX);
+  const [VMIN, setVMIN] = useState<number>(DEFAULT_VMIN);
+  const [colormap, setColormap] = useState<string>(DEFAULT_COLOR_MAP);
   const [assets, setAssets] = useState<string>('xco2');
   // targets based on target type
   const [targetTypes, setTargetTypes] = useState<string[]>([]);
@@ -160,9 +165,9 @@ export function Dashboard({
     setTargetTypes([...targetTypesLocal]);
 
     // also few extra things for the application state. We can receive it from collection json.
-    const VMIN = 400;
-    const VMAX = 420;
-    const colormap: string = 'magma';
+    const VMIN = DEFAULT_VMIN;
+    const VMAX = DEFAULT_VMAX;
+    const colormap: string = DEFAULT_COLOR_MAP;
     setVMIN(VMIN);
     setVMAX(VMAX);
     setColormap(colormap);
@@ -244,9 +249,9 @@ export function Dashboard({
             {VMAX && (
               <ConfigurableColorBar
                 id='configurable-color-bar'
-                VMAXLimit={420}
-                VMINLimit={400}
-                colorMap={colormap}
+                VMAXLimit={DEFAULT_VMAX}
+                VMINLimit={DEFAULT_VMIN}
+                colorMap={DEFAULT_COLOR_MAP}
                 setColorMap={setColormap}
                 setVMIN={setVMIN}
                 setVMAX={setVMAX}
