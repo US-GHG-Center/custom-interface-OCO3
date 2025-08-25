@@ -37,7 +37,7 @@ jobs:
           missing_vars=()
 
           # Check for required variables
-          # Variables for the Application: Remove unnecessary variables for the fork. 
+          # Variables for the Application: Remove unnecessary variables for the fork.
           [ -z "${{ secrets.REACT_APP_MAPBOX_ACCESS_TOKEN }}" ] && missing_vars+=("secrets.REACT_APP_MAPBOX_ACCESS_TOKEN")
           [ -z "${{ secrets.REACT_APP_MAPBOX_STYLE_URL }}" ] && missing_vars+=("secrets.REACT_APP_MAPBOX_STYLE_URL")
           [ -z "${{ vars.PUBLIC_URL }}" ] && missing_vars+=("vars.PUBLIC_URL")
@@ -87,6 +87,7 @@ jobs:
         env:
           REACT_APP_MAPBOX_TOKEN: ${{ secrets.REACT_APP_MAPBOX_ACCESS_TOKEN }}
           REACT_APP_MAPBOX_STYLE_URL: ${{ secrets.REACT_APP_MAPBOX_STYLE_URL }}
+          REACT_APP_BASEMAP_STYLES_MAPBOX_ID: ${{secrets.REACT_APP_BASEMAP_STYLES_MAPBOX_ID}}
           PUBLIC_URL: ${{ vars.PUBLIC_URL }}
           REACT_APP_STAC_API_URL: ${{ vars.REACT_APP_STAC_API_URL }}
           REACT_APP_RASTER_API_URL: ${{ vars.REACT_APP_RASTER_API_URL }}
@@ -103,7 +104,7 @@ jobs:
           path: ./build
 
   deploy:
-    name: Deploy Interface Template to ${{ needs.define-environment.outputs.env_name }} 🚀 
+    name: Deploy Interface Template to ${{ needs.define-environment.outputs.env_name }} 🚀
     needs:
       - build
       - define-environment
@@ -115,7 +116,7 @@ jobs:
 
     runs-on: ubuntu-latest
     steps:
-       
+
       - name: Checkout 🛎️
         uses: actions/checkout@v4
 
@@ -131,7 +132,7 @@ jobs:
           role-to-assume: ${{ secrets.DEPLOYMENT_ROLE_ARN }}
           role-session-name: ${{ github.repository_owner}}
           aws-region: ${{ vars.DEPLOYMENT_REGION }}
-      
+
       - name: Upload to S3
         run: |
           aws s3 sync "./build" s3://${{ vars.DEPLOYMENT_BUCKET }}${{ vars.PUBLIC_URL}} --cache-control max-age=30,must-revalidate,s-maxage=604800 --delete
