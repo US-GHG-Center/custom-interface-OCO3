@@ -142,7 +142,7 @@ export const SamInfoCard = ({
               {/* Acquisition Time */}
               <Box sx={{ flex: 1 }}>
                 <CaptionValue caption="Acquisition Time">
-                  {moment.utc(startDatetime).format('MM/DD/YYYY, HH:mm:ss') + ' UTC'}
+                  {moment.utc(startDatetime, "MM/DD/YYYY, HH:mm:ss [UTC]").format("MM/DD/YYYY, HH:mm:ss") + " UTC"}
                 </CaptionValue>
               </Box>
 
