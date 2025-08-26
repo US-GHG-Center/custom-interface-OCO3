@@ -1,6 +1,6 @@
 import { rgb } from "d3";
 
-export const ZOOM_LEVEL_MARGIN = 8;
+export const ZOOM_LEVEL_MARGIN = 30;
 
 export const PopularMapMarkerColors = [
   'rgb(0, 146, 188)',
