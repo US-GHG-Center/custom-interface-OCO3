@@ -71,6 +71,8 @@ export function Dashboard({
   //color map
   const [VMAX, setVMAX] = useState<number>(DEFAULT_VMAX);
   const [VMIN, setVMIN] = useState<number>(DEFAULT_VMIN);
+  const [VMINLimit, setVMINLimit] = useState<number>(DEFAULT_VMIN);
+  const [VMAXLimit, setVMAXLimit] = useState<number>(DEFAULT_VMAX);
   const [colormap, setColormap] = useState<string>(DEFAULT_COLOR_MAP);
   const [assets, setAssets] = useState<string>('xco2');
   // targets based on target type
@@ -178,6 +180,20 @@ export function Dashboard({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dataFactory.current]);
 
+  useEffect(() => {
+    let minValue = Math.floor(
+      visualizationLayers[0]?.assets?.[assets]?.['raster:bands']?.[0]?.statistics?.minimum ?? DEFAULT_VMIN
+    );
+    let maxValue = Math.ceil(
+      visualizationLayers[0]?.assets?.[assets]?.['raster:bands']?.[0]?.statistics?.maximum ?? DEFAULT_VMAX
+    );
+
+    maxValue = maxValue > 100000 ? DEFAULT_VMAX : maxValue; // to avoid erroneous values.
+
+    setVMINLimit(minValue);
+    setVMAXLimit(maxValue);
+  }, [visualizationLayers]);
+
   // JSX
   return (
     <Box className='fullSize'>
@@ -255,8 +271,8 @@ export function Dashboard({
             {VMAX && (
               <ConfigurableColorBar
                 id={'configurable-color-bar'}
-                VMAXLimit={DEFAULT_VMAX}
-                VMINLimit={DEFAULT_VMIN}
+                VMAXLimit={VMAXLimit}
+                VMINLimit={VMINLimit}
                 colorMap={DEFAULT_COLOR_MAP}
                 setColorMap={setColormap}
                 setVMIN={setVMIN}

@@ -66,6 +66,11 @@ export const ConfigurableColorBar = ({
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [localVMIN, localVMAX, selColorMap, isReversed])
 
+  useEffect(() => {
+    setLocalVMIN(VMINLimit);
+    setLocalVMAX(VMAXLimit);
+  }, [VMINLimit, VMAXLimit]);
+
   return (
     <Accordion
       expanded={expanded}
