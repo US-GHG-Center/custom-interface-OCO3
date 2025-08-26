@@ -272,43 +272,43 @@ export function Dashboard({
           cardRef={cardRef}
           header={
             selectedSams.length > 0 ? (
-            <>
-              <Typography
-                variant='h6'
-                component='div'
-                fontWeight='bold'
-                className='drawer-head-content'
-              >
-                SAMs
-              </Typography>
-              <Tooltip
-                title={
-                  visualizationLayers.length
-                    ? visualizationLayers[0].properties.target_name
-                    : ''
-                }
-              >
+              <>
                 <Typography
-                  variant="h6"
-                  component="div"
-                  fontWeight="bold"
-                  className="drawer-head-content"
-                  sx={{
-                    textAlign: 'right',
-                    overflow: 'hidden',
-                    textOverflow: 'ellipsis',
-                    whiteSpace: 'nowrap',
-                    maxWidth: '75%',
-                    display: 'block',
-                  }}
+                  variant='h6'
+                  component='div'
+                  fontWeight='bold'
+                  className='drawer-head-content'
                 >
-                  {visualizationLayers.length &&
-                    visualizationLayers[0].properties.target_name}
+                  SAMs
                 </Typography>
-              </Tooltip>
-            </>
-            ): (
-             <Typography
+                <Tooltip
+                  title={
+                    visualizationLayers.length
+                      ? visualizationLayers[0].properties.target_name
+                      : ''
+                  }
+                >
+                  <Typography
+                    variant="h6"
+                    component="div"
+                    fontWeight="bold"
+                    className="drawer-head-content"
+                    sx={{
+                      textAlign: 'right',
+                      overflow: 'hidden',
+                      textOverflow: 'ellipsis',
+                      whiteSpace: 'nowrap',
+                      maxWidth: '75%',
+                      display: 'block',
+                    }}
+                  >
+                    {visualizationLayers.length &&
+                      visualizationLayers[0].properties.target_name}
+                  </Typography>
+                </Tooltip>
+              </>
+            ) : (
+              <Typography
                 variant='h6'
                 component='div'
                 fontWeight='bold'

@@ -168,7 +168,6 @@ export const SamInfoCard = ({
               </Box>
             </Box>
           </Box>
-
         </>
       </StacItemInfoCard>
     </div>
