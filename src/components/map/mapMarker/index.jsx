@@ -6,7 +6,7 @@ import { ZOOM_LEVEL_MARGIN } from '../utils/constants';
 import { getMarkerColor } from '../utils';
 
 
-export const MarkerFeature = ({ vizItems, onClickOnMarker }) => {
+export const MarkerFeature = ({ vizItems, onClickOnMarker, getPopupContent=() => 'hello' }) => {
   const { map } = useMapbox();
   const [markersVisible, setMarkersVisible] = useState(true);
   const markersRef = useRef([]);
@@ -30,17 +30,17 @@ export const MarkerFeature = ({ vizItems, onClickOnMarker }) => {
 
       const marker = new mapboxgl.Marker(el).setLngLat([lon, lat]);
 
-      // // hover popup on hover
-      // const popup = getPopupContent
-      //   ? new mapboxgl.Popup({
-      //       offset: 5,
-      //       closeButton: false,
-      //       closeOnClick: false,
-      //     }).setHTML(getPopupContent(item))
-      //   : null;
+      // hover popup on hover
+      const popup = getPopupContent
+        ? new mapboxgl.Popup({
+            offset: 5,
+            closeButton: false,
+            closeOnClick: false,
+          }).setHTML(getPopupContent(item))
+        : null;
 
-      // el.addEventListener('mouseenter', () => popup && marker.setPopup(popup).togglePopup());
-      // el.addEventListener('mouseleave', () => popup?.remove());
+      el.addEventListener('mouseenter', () => popup && marker.setPopup(popup).togglePopup());
+      el.addEventListener('mouseleave', () => popup?.remove());
 
       el.addEventListener('click', (e) => {
         e.stopPropagation();
