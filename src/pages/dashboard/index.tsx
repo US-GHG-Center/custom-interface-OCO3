@@ -16,7 +16,7 @@ import {
   Title,
   MapControls,
   MapZoom,
-  Dropdown,
+  Search,
   VizItemTimeline,
   MapLegend,
   BlankInfoCard,
@@ -86,7 +86,10 @@ export function Dashboard({
   // callback handler functions
   // Note: these callback handler function needs to be initilaized only once.
   // so using useCallback hook.
-  const handleSelectedMarker = useCallback((vizItemId: string) => {
+  const handleSelectedMarker = useCallback((vizItem: string | VizItem) => {
+    if (!vizItem) return;
+    const vizItemId = (typeof vizItem !== 'string') ? vizItem.id : vizItem;
+
     if (!vizItemId || !dataFactory.current) return;
     let targetId: string =
       dataFactory.current?.getTargetIdFromStacIdSAM(vizItemId);
@@ -203,24 +206,25 @@ export function Dashboard({
           />
         </MainMap>
 
-        <div className="flex-left-column">
+        <div className='flex-left-column'>
           <Paper className='title-container'>
             <Title title={TITLE} description={DESCRIPTION} />
-            {/* <div className='title-content'>
-                  <HorizontalLayout>
-                    <Search
-                      vizItems={targets}
-                      onSelectedVizItemSearch={handleSelectedVizItemSearch}
-                      placeHolderText={'Search by vizItem ID and substring'}
-                    ></Search>
-                  </HorizontalLayout>
-                  <HorizontalLayout>
+            <div className='title-content'>
+              <HorizontalLayout>
+                <Search
+                  vizItems={targets}
+                  onSelectedVizItemSearch={handleSelectedMarker}
+                  searchProperty='properties.target_name'
+                  placeHolderText={'Search by SAM Name'}
+                ></Search>
+              </HorizontalLayout>
+              {/* <HorizontalLayout>
                     <FilterByDate
                       vizItems={targets}
                       onFilteredVizItems={setFilteredVizItems}
                     />
-                  </HorizontalLayout>
-                </div> */}
+                  </HorizontalLayout> */}
+            </div>
             <div className='title-content'>
               {selectedSams.length ? (
                 <HorizontalLayout>
