@@ -69,3 +69,23 @@ export function capitalizeFirstLetter(text) {
   if (!text) return '';
   return text.charAt(0).toUpperCase() + text.slice(1);
 }
+
+
+/* 
+  Generates the popup content for a station marker
+*/
+export function getPopUpContent(station) {
+  // Extract latitude and longitude from Geometry
+  const [lon, lat] = station.geometry.coordinates[0][0]; // Assuming the first coordinate pair is representative
+  // Extract unique measurement types
+  const uniqueMeasurements = Array.from(
+    new Set(station.collection_items?.map(item => `${item.methodology}-${item.measurement_inst}`))
+  ).join("; ");
+
+  return `
+    <div style="font-family: Arial, sans-serif; font-size: 12px; color: #333;">
+      <strong>${station.properties.target_name || 'Unknown Station'}</strong><br/>
+      <em>Type:</em> ${station.properties.target_type || 'N/A'}<br/>
+    </div>
+  `;
+}

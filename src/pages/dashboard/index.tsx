@@ -4,6 +4,7 @@ import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
 import { Typography, Tooltip } from '@mui/material';
 import styled from 'styled-components';
+import { getPopUpContent } from '../../utils/index.js';
 
 import {
   MainMap,
@@ -189,6 +190,7 @@ export function Dashboard({
           <MarkerFeature
             vizItems={targets}
             onClickOnMarker={handleSelectedMarker}
+            getPopupContent={getPopUpContent}
           ></MarkerFeature>
           <VisualizationLayers
             vizItems={visualizationLayers}
