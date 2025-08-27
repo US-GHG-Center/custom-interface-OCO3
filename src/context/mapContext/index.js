@@ -21,10 +21,6 @@ export const MapboxProvider = ({ children }) => {
       mapboxStyleUrl = `${mapboxStyleBaseUrl}/${mapboxStyleId}`;
     }
 
-    console.log('Using map style url:', mapboxStyleUrl);
-    console.log('BASEMAP STYLES MAPBOX ID:', mapboxStyleId);
-    console.log('Mapbox style URL:', mapboxStyleBaseUrl);
-
     mapboxgl.accessToken = accessToken;
     map.current = new mapboxgl.Map({
       container: mapContainer.current,
