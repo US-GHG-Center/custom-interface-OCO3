@@ -44,7 +44,7 @@ export const SamInfoCard = ({
     if (isNaN(num)) return input.toString();
 
     if (Math.abs(num) >= 1e5) {
-      return num.toExponential(2);
+      return 'N/A';
     }
     return Number(num.toFixed(3)).toString();
   };
