@@ -40,6 +40,7 @@ jobs:
           # Variables for the Application: Remove unnecessary variables for the fork.
           [ -z "${{ secrets.REACT_APP_MAPBOX_ACCESS_TOKEN }}" ] && missing_vars+=("secrets.REACT_APP_MAPBOX_ACCESS_TOKEN")
           [ -z "${{ secrets.REACT_APP_MAPBOX_STYLE_URL }}" ] && missing_vars+=("secrets.REACT_APP_MAPBOX_STYLE_URL")
+          [ -z "${{ secrets.REACT_APP_BASEMAP_STYLES_MAPBOX_ID }}" ] && missing_vars+=("secrets.REACT_APP_BASEMAP_STYLES_MAPBOX_ID")
           [ -z "${{ vars.PUBLIC_URL }}" ] && missing_vars+=("vars.PUBLIC_URL")
           # note: vars.PUBLIC_URL is expected to have leading and trailing /
           [ -z "${{ vars.REACT_APP_STAC_API_URL }}" ] && missing_vars+=("vars.REACT_APP_STAC_API_URL")

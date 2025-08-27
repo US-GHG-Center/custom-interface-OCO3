@@ -7,8 +7,7 @@ const MapboxContext = createContext();
 
 const accessToken = process.env.REACT_APP_MAPBOX_TOKEN;
 const mapboxStyleBaseUrl = process.env.REACT_APP_MAPBOX_STYLE_URL;
-const BASEMAP_STYLES_MAPBOX_ID =
-  process.env.REACT_APP_BASEMAP_STYLES_MAPBOX_ID || '';
+const mapboxStyleId = process.env.REACT_APP_BASEMAP_STYLES_MAPBOX_ID;
 
 export const MapboxProvider = ({ children }) => {
   const mapContainer = useRef(null);
@@ -19,11 +18,11 @@ export const MapboxProvider = ({ children }) => {
 
     let mapboxStyleUrl = 'mapbox://styles/mapbox/streets-v12';
     if (mapboxStyleBaseUrl) {
-      mapboxStyleUrl = `${mapboxStyleBaseUrl}/${BASEMAP_STYLES_MAPBOX_ID}`;
+      mapboxStyleUrl = `${mapboxStyleBaseUrl}/${mapboxStyleId}`;
     }
 
     console.log('Using map style url:', mapboxStyleUrl);
-    console.log('BASEMAP STYLES MAPBOX ID:', BASEMAP_STYLES_MAPBOX_ID);
+    console.log('BASEMAP STYLES MAPBOX ID:', mapboxStyleId);
     console.log('Mapbox style URL:', mapboxStyleBaseUrl);
 
     mapboxgl.accessToken = accessToken;
