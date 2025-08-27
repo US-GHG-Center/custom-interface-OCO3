@@ -204,7 +204,7 @@ export function Dashboard({
             openDrawer={openDrawer}
             setOpenDrawer={setOpenDrawer}
             handleResetHome={handleResetHome}
-            handleResetToSelectedRegion={() => { }}
+            handleResetToSelectedRegion={() => {}}
           />
           <MarkerFeature
             vizItems={targets}
