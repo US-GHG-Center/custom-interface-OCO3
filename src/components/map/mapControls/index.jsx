@@ -182,7 +182,6 @@ export const MapControls = ({
   const handleBaseMapSelection = (basemapStyleName, basemapStyleId = '') => {
     let completeStyleId = basemapStyleName + `/${basemapStyleId}`;
     const mapboxStyleBaseUrl = `mapbox://styles/${completeStyleId}`;
-    console.log('Style url:', mapboxStyleBaseUrl);
     if (map) {
       map.setStyle(mapboxStyleBaseUrl);
     }
