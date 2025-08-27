@@ -131,7 +131,7 @@ export const SamInfoCard = ({
                   {targetType ? capitalizeFirstLetter(targetType) : 'N/A'}
                 </CaptionValue>
                 <CaptionValue caption="SAM Altitude">
-                  {Number(targetAltitude) ? targetAltitude + ' m' : 'N/A'}
+                  {targetAltitude ? targetAltitude + ' m' : 'N/A'}
                 </CaptionValue>
               </Box>
             </Box>
