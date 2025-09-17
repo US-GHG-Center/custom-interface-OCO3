@@ -17,11 +17,15 @@ const BasemapSelector = ({ setBaseMap }) => {
     },
     {
       label: 'Light',
-      style: 'mapbox/light-v11',
+      token:
+        'pk.eyJ1IjoidGVhbWltcGFjdCIsImEiOiJja25yOTQxajkwZ2h5Mm5wZ3YyMXBwOWdoIn0.hDCoaNyE9h5E9WvRtu2hDQ',
+      style: 'teamimpact/cmfo6uhix004101ry20g1bymg',
     },
     {
       label: 'Dark',
-      style: 'mapbox/dark-v11',
+      token:
+        'pk.eyJ1IjoidGVhbWltcGFjdCIsImEiOiJja25yOTQxajkwZ2h5Mm5wZ3YyMXBwOWdoIn0.hDCoaNyE9h5E9WvRtu2hDQ',
+      style: 'teamimpact/cmfo6ofk9008v01ryd8ww3mjs',
     },
   ];
 
@@ -33,8 +37,12 @@ const BasemapSelector = ({ setBaseMap }) => {
     setAnchorEl(null);
   };
 
-  const handleBasemapSelect = (basemapStyleName, basemapStyleId) => {
-    setBaseMap(basemapStyleName, basemapStyleId);
+  const handleBasemapSelect = (
+    basemapStyleName,
+    basemapStyleId,
+    basemapToken
+  ) => {
+    setBaseMap(basemapStyleName, basemapStyleId, basemapToken);
     handleClose();
   };
 
@@ -71,7 +79,9 @@ const BasemapSelector = ({ setBaseMap }) => {
         {basemapOptions.map((option) => (
           <MenuItem
             key={option.id}
-            onClick={() => handleBasemapSelect(option.style, option.id)}
+            onClick={() =>
+              handleBasemapSelect(option.style, option.id, option.token)
+            }
             dense
           >
             <ListItemText primary={option.label} />
