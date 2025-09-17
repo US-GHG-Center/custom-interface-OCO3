@@ -1,5 +1,5 @@
 .timeline-card {
-  font-family: sans-serif;
+  font-family: DM Sans,sans;
 }
 
 .timeline-header-container {
@@ -18,7 +18,7 @@
 .timeline-title {
   font-weight: 600;
   font-size: 16px;
-  color: var(--main-blue);
+  color: var(--main-gray);
 }
 
 .timeline-controls {

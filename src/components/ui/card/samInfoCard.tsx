@@ -115,7 +115,7 @@ export const SamInfoCard = ({
         <>
           <Box sx={{ marginTop: '20px', width: '100%' }}>
             {/* Target Group */}
-            <Typography variant="body2" sx={{ mb: 0.5, color: 'var(--main-blue)' }}>SAM Details</Typography>
+            <Typography variant="body2" sx={{ mb: 0.5, color: 'var(--main-gray)' }}>SAM Details</Typography>
             <Box sx={{ display: 'flex', flexDirection: 'row', gap: 2, width: '100%' }}>
               {/* Left Group: 75% width, column layout */}
               <Box sx={{ flex: 3, display: 'flex', flexDirection: 'column', gap: 1 }}>
@@ -137,7 +137,7 @@ export const SamInfoCard = ({
             </Box>
 
             {/* Visualization Group */}
-            <Typography variant="body2" sx={{ mt: 3, mb: 0.5, color: 'var(--main-blue)' }}>Visualization Details</Typography>
+            <Typography variant="body2" sx={{ mt: 3, mb: 0.5, color: 'var(--main-gray)' }}>Visualization Details</Typography>
             <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0, width: '100%' }}>
               {/* Acquisition Time */}
               <Box sx={{ flex: 1 }}>

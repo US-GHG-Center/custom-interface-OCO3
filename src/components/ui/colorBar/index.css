@@ -22,6 +22,7 @@
 
 .colorbar-label {
     text-align: center;
+    font-family: DM Sans,sans;
 }
 
 .colorbar-scale-tick-label-container {
@@ -30,7 +31,7 @@
 }
 
 .colorbar-scale-tick-label {
-    font-family: "Roboto","Helvetica","Arial","sans-serif";
+    font-family: DM Sans,sans;
     font-weight: 400;
     font-size: .8rem;
 }

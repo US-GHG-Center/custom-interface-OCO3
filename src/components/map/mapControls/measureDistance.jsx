@@ -9,8 +9,8 @@ function MeasureButton({ icon: iconClicked, onClick }) {
       <IconButton
         className='measure-icon map-control-icon'
         style={{
-          backgroundColor: !iconClicked ? '' : 'var(--main-blue)',
-          color: !iconClicked ? 'var(--main-blue)' : 'white',
+          backgroundColor: !iconClicked ? '' : 'var(--main-gray)',
+          color: !iconClicked ? 'var(--main-gray)' : 'white',
           padding: '3px',
         }}
         onClick={onClick}

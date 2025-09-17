@@ -82,12 +82,12 @@ export const ConfigurableColorBar = ({
       >
         <div style={{ display: 'flex', flexDirection: 'column', width: '100%', marginRight: '1rem' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
-            <span style={{ fontSize: '1rem' }}>
+            <Typography style={{ fontSize: '1rem' }}>
               {currColorMap.replace(/_r/g, '')}
-            </span>
-            <span style={{ fontSize: '0.8rem', color: '#666' }}>
+            </Typography>
+            <Typography style={{ fontSize: '0.8rem', color: '#666' }}>
               {isReversed ? 'Reversed' : ''}
-            </span>
+            </Typography>
           </div>
           
           <ColorBar
