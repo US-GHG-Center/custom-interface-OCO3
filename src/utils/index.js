@@ -83,7 +83,7 @@ export function getPopUpContent(station) {
   ).join("; ");
 
   return `
-    <div style="font-family: Arial, sans-serif; font-size: 12px; color: #333;">
+    <div style="font-family: DM Sans,sans; font-size: 12px; color: #333;">
       <strong>${station.properties.target_name || 'Unknown Station'}</strong><br/>
       <em>Type:</em> ${station.properties.target_type || 'N/A'}<br/>
     </div>

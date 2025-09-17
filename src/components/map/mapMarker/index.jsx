@@ -6,7 +6,7 @@ import { ZOOM_LEVEL_MARGIN } from '../utils/constants';
 import { getMarkerColor } from '../utils';
 
 
-export const MarkerFeature = ({ vizItems, onClickOnMarker, getPopupContent=() => 'hello' }) => {
+export const MarkerFeature = ({ vizItems, onClickOnMarker, getPopupContent=() => '' }) => {
   const { map } = useMapbox();
   const [markersVisible, setMarkersVisible] = useState(true);
   const markersRef = useRef([]);

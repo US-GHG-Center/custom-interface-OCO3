@@ -4,7 +4,7 @@
 }
 
 .map-legend-title {
-    color: var(--main-blue);
+    color: var(--main-gray);
     font-weight: bold !important;
     padding-left: 0.2rem;
     text-align: left;
