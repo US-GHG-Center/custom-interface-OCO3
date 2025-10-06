@@ -12,20 +12,18 @@ const BasemapSelector = ({ setBaseMap }) => {
   const basemapOptions = [
     {
       label: 'Satellite',
-      style: 'covid-nasa',
-      id: 'cldu1cb8f00ds01p6gi583w1m',
+      style: process.env.REACT_APP_MAPBOX_STYLE_URL,
+      id: process.env.REACT_APP_BASEMAP_STYLES_MAPBOX_ID,
     },
     {
       label: 'Light',
-      token:
-        'pk.eyJ1IjoidGVhbWltcGFjdCIsImEiOiJja25yOTQxajkwZ2h5Mm5wZ3YyMXBwOWdoIn0.hDCoaNyE9h5E9WvRtu2hDQ',
-      style: 'teamimpact/cmfo6uhix004101ry20g1bymg',
+      token: process.env.REACT_APP_MAPBOX_LIGHT_TOKEN,
+      style: process.env.REACT_APP_MAPBOX_STYLE_URL_LIGHT,
     },
     {
       label: 'Dark',
-      token:
-        'pk.eyJ1IjoidGVhbWltcGFjdCIsImEiOiJja25yOTQxajkwZ2h5Mm5wZ3YyMXBwOWdoIn0.hDCoaNyE9h5E9WvRtu2hDQ',
-      style: 'teamimpact/cmfo6ofk9008v01ryd8ww3mjs',
+      token: process.env.REACT_APP_MAPBOX_DARK_TOKEN,
+      style: process.env.REACT_APP_MAPBOX_STYLE_URL_DARK,
     },
   ];
 

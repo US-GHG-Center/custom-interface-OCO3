@@ -185,10 +185,9 @@ export const MapControls = ({
     mapboxToken = ''
   ) => {
     let completeStyleId = basemapStyleName + `/${basemapStyleId}`;
-    const mapboxStyleBaseUrl = `mapbox://styles/${completeStyleId}`;
+    const mapboxStyleBaseUrl = completeStyleId;
 
     const mapboxAccessToken = mapboxToken || process.env.REACT_APP_MAPBOX_TOKEN;
-    console.log('Using Mapbox Token:', mapboxAccessToken);
     mapboxgl.accessToken = mapboxAccessToken;
 
     if (map) {
