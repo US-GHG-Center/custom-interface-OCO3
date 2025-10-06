@@ -422,7 +422,8 @@ export const VizItemTimeline = ({
                 <Typography
                   sx={{ fontSize: '0.8rem', textAlign: 'left', color: 'text.secondary', pl: 1, mt: 1 }}
                 >
-                  This timeline is <strong>zoomable</strong> (mouse wheel or pinch) and <strong>scrollable</strong> (drag horizontally)
+                  This timeline is <strong>zoomable</strong> (scroll or pinch)
+                   and <strong>scrollable</strong> (drag horizontally)
                 </Typography>
               )}
             </div>

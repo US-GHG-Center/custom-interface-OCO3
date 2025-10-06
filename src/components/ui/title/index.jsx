@@ -20,9 +20,8 @@ export const Title = ({ title, description }) => {
         component='div'
         className='title-note'
         sx={{ margin: '0 0.9rem', color: 'text.secondary' }}
-      >
-        {description}
-      </Typography>}
+        dangerouslySetInnerHTML={{ __html: description }}
+      />}
     </>
   );
 };
