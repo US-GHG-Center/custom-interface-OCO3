@@ -32,10 +32,14 @@ jobs:
           missing_vars=()
 
           # Check for required variables
-          # Variables for the Application: Remove unnecessary variables for the fork. 
+          # Variables for the Application: Remove unnecessary variables for the fork.
           [ -z "${{ secrets.REACT_APP_MAPBOX_ACCESS_TOKEN }}" ] && missing_vars+=("secrets.REACT_APP_MAPBOX_ACCESS_TOKEN")
           [ -z "${{ secrets.REACT_APP_MAPBOX_STYLE_URL }}" ] && missing_vars+=("secrets.REACT_APP_MAPBOX_STYLE_URL")
           [ -z "${{ secrets.REACT_APP_BASEMAP_STYLES_MAPBOX_ID }}" ] && missing_vars+=("secrets.REACT_APP_BASEMAP_STYLES_MAPBOX_ID")
+          [ -z "${{ secrets.REACT_APP_MAPBOX_LIGHT_TOKEN }}" ] && missing_vars+=("secrets.REACT_APP_MAPBOX_LIGHT_TOKEN")
+          [ -z "${{ secrets.REACT_APP_MAPBOX_STYLE_URL_LIGHT }}" ] && missing_vars+=("secrets.REACT_APP_MAPBOX_STYLE_URL_LIGHT")
+          [ -z "${{ secrets.REACT_APP_MAPBOX_DARK_TOKEN }}" ] && missing_vars+=("secrets.REACT_APP_MAPBOX_DARK_TOKEN")
+          [ -z "${{ secrets.REACT_APP_MAPBOX_STYLE_URL_DARK }}" ] && missing_vars+=("secrets.REACT_APP_MAPBOX_STYLE_URL_DARK")
           [ -z "${{ vars.PUBLIC_URL }}" ] && missing_vars+=("vars.PUBLIC_URL")
           # note: vars.PUBLIC_URL is expected to have leading and trailing /
           [ -z "${{ vars.REACT_APP_STAC_API_URL }}" ] && missing_vars+=("vars.REACT_APP_STAC_API_URL")
@@ -93,6 +97,10 @@ jobs:
           REACT_APP_MAPBOX_TOKEN: ${{ secrets.REACT_APP_MAPBOX_ACCESS_TOKEN }}
           REACT_APP_MAPBOX_STYLE_URL: ${{ secrets.REACT_APP_MAPBOX_STYLE_URL }}
           REACT_APP_BASEMAP_STYLES_MAPBOX_ID: ${{ secrets.REACT_APP_BASEMAP_STYLES_MAPBOX_ID }}
+          REACT_APP_MAPBOX_LIGHT_TOKEN: ${{ secrets.REACT_APP_MAPBOX_LIGHT_TOKEN }}
+          REACT_APP_MAPBOX_STYLE_URL_LIGHT: ${{ secrets.REACT_APP_MAPBOX_STYLE_URL_LIGHT }}
+          REACT_APP_MAPBOX_DARK_TOKEN: ${{ secrets.REACT_APP_MAPBOX_DARK_TOKEN }}
+          REACT_APP_MAPBOX_STYLE_URL_DARK: ${{ secrets.REACT_APP_MAPBOX_STYLE_URL_DARK }}
           PUBLIC_URL: ${{ vars.PUBLIC_URL }}pr-preview-${{ github.event.number }}
           REACT_APP_STAC_API_URL: ${{ vars.REACT_APP_STAC_API_URL }}
           REACT_APP_RASTER_API_URL: ${{ vars.REACT_APP_RASTER_API_URL }}
