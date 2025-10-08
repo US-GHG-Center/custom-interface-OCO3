@@ -191,7 +191,51 @@ export const MapControls = ({
     mapboxgl.accessToken = mapboxAccessToken;
 
     if (map) {
+      // Store current layers and sources before changing style
+      const customLayers = [];
+      const customSources = {};
+
+      // Get all layers that are not part of the basemap
+      const style = map.getStyle();
+      if (style && style.layers) {
+        style.layers.forEach((layer) => {
+          // Check if this is a custom layer (not part of the basemap)
+          if (layer.id.includes('raster') || layer.id.includes('polygon')) {
+            customLayers.push({
+              layer: layer,
+              before: null // We'll add it on top
+            });
+
+            // Store the source data
+            if (layer.source && !customSources[layer.source]) {
+              const source = map.getSource(layer.source);
+              if (source) {
+                customSources[layer.source] = source.serialize();
+              }
+            }
+          }
+        });
+      }
+
+      // Change the basemap style
       map.setStyle(mapboxStyleBaseUrl);
+
+      // Re-add custom layers after the style has loaded
+      map.once('style.load', () => {
+        // Re-add sources
+        Object.entries(customSources).forEach(([sourceId, sourceData]) => {
+          if (!map.getSource(sourceId)) {
+            map.addSource(sourceId, sourceData);
+          }
+        });
+
+        // Re-add layers
+        customLayers.forEach(({ layer }) => {
+          if (!map.getLayer(layer.id)) {
+            map.addLayer(layer);
+          }
+        });
+      });
     }
   };
 
