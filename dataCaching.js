@@ -90,6 +90,8 @@ async function fetchAllFromSTACAPI(STACApiUrl) {
  * @returns {Promise<any>} A promise that resolves to the list of items fetched from the API.
  */
 async function apiCaller(STACApiUrl) {
+  // limit per fetch
+  const urlFetchLimit = 1000;
   let requiredResult = [];
 
   if (!STACApiUrl) return requiredResult;
@@ -97,10 +99,10 @@ async function apiCaller(STACApiUrl) {
   let urlWithLimit = STACApiUrl;
 
   if (!STACApiUrl.includes('limit') && STACApiUrl.includes('token')) {
-    urlWithLimit = `${STACApiUrl}&limit=10000`;
+    urlWithLimit = `${STACApiUrl}&limit=${urlFetchLimit}`;
   }
   if (!STACApiUrl.includes('limit') && !STACApiUrl.includes('token')) {
-    urlWithLimit = `${STACApiUrl}?limit=10000`;
+    urlWithLimit = `${STACApiUrl}?limit=${urlFetchLimit}`;
   }
 
   console.log('## fetching from --> ', urlWithLimit);
