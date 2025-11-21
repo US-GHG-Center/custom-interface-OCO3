@@ -93,10 +93,14 @@ export function Dashboard({
     const vizItemId = (typeof vizItem !== 'string') ? vizItem.id : vizItem;
 
     if (!vizItemId || !dataFactory.current) return;
+    
     let targetId: string =
       dataFactory.current?.getTargetIdFromStacIdSAM(vizItemId);
     let candidateSams: SAM[] =
       dataFactory.current?.getVizItemsOnMarkerClicked(targetId) || [];
+
+    // if no sams found, return.
+    if (candidateSams.length === 0) return;
 
     let placeHolderSam: SAM = candidateSams[0];
     setVisualizationLayers([placeHolderSam]);
